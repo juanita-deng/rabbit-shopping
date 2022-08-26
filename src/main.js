@@ -4,4 +4,5 @@ import router from './router'
 import store from './store'
 // 导入样式处理文件,类似reset.css,相对更加平和
 import 'normalize.css'
+import '@/assets/styles/common.less'
 createApp(App).use(store).use(router).mount('#app')
