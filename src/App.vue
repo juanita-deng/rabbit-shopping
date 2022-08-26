@@ -17,12 +17,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-// @import '~@/assets/styles/theme.less';
-@import '~@/assets/styles/mixins.less';
 .test {
   width: 100px;
   height: 100px;
-  background-color: red;
+  background-color: @xtxColor;
   .hoverShadow ();
 }
 </style>
