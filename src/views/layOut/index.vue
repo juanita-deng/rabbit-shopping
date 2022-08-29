@@ -7,12 +7,17 @@
   <Footer></Footer>
 </template>
 <script>
+import { useStore } from 'vuex'
 import TopBar from './components/topbar.vue'
 import Header from './components/header.vue'
 import Footer from './components/footer.vue'
 export default {
   name: 'layout',
-  components: { TopBar, Header, Footer }
+  components: { TopBar, Header, Footer },
+  setup() {
+    const store = useStore()
+    store.dispatch('category/getList')
+  }
 }
 </script>
 <style lang="less" scoped>

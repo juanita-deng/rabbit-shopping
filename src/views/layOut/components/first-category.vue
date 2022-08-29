@@ -28,8 +28,17 @@
   </ul>
 </template>
 <script>
+import { useStore } from 'vuex'
+
 export default {
-  name: 'first-category'
+  name: 'first-category',
+  setup() {
+    const store = useStore()
+    const categoryList = store.state.category.list
+    return {
+      categoryList
+    }
+  }
 }
 </script>
 <style lang="less" scoped>
