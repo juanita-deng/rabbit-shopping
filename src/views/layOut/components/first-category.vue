@@ -4,19 +4,29 @@
     <li class="home">
       <RouterLink to="/"> 首页</RouterLink>
     </li>
-    <li class="home" v-for="category in categoryList" :key="category.id">
+    <li
+      class="home"
+      v-for="category in categoryList"
+      :key="category.id"
+      @mouseenter="show(category.id)"
+      @mouseleave="hide(category.id)"
+    >
       <!-- <a href="#">{{ category.name }}</a> -->
-      <RouterLink :to="`/category/${category.id}`">
+      <RouterLink :to="`/category/${category.id}`" @click="hide(category.id)">
         {{ category.name }}
       </RouterLink>
-      <div class="layer">
+      <div :class="['layer', { open: category.open }]">
         <ul>
           <li v-for="item in category.children" :key="item.id">
             <!-- <a href="#">
               <img :src="item.picture" alt="" />
               <p>{{ item.name }}</p>
             </a> -->
-            <RouterLink :to="`/category/sub/${item.id}`">
+            <!-- !!!注意:此处的点击事件传的是category,不是item -->
+            <RouterLink
+              :to="`/category/sub/${item.id}`"
+              @click="hide(category.id)"
+            >
               <img :src="item.picture" alt="" />
               <p>{{ item.name }}</p>
             </RouterLink>
@@ -37,8 +47,16 @@ export default {
     const store = useStore()
     // 把store中的state映射为组件的计算属性,为了保持dom的及时更新
     const categoryList = computed(() => store.state.category.list)
+    const show = (id) => {
+      store.commit('category/show', id)
+    }
+    const hide = (id) => {
+      store.commit('category/hide', id)
+    }
     return {
-      categoryList
+      categoryList,
+      show,
+      hide
     }
   }
 }
@@ -66,13 +84,17 @@ export default {
         color: @xtxColor;
         border-bottom: 1px solid @xtxColor;
       }
-      > .layer {
-        height: 132px;
-        opacity: 1;
-      }
+      // > .layer {
+      //   height: 132px;
+      //   opacity: 1;
+      // }
     }
   }
   .layer {
+    &.open {
+      height: 132px;
+      opacity: 1;
+    }
     width: 1240px;
     background-color: #fff;
     position: absolute;
