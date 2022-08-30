@@ -5,14 +5,21 @@
       <RouterLink to="/"> 首页</RouterLink>
     </li>
     <li class="home" v-for="category in categoryList" :key="category.id">
-      <a href="#">{{ category.name }}</a>
+      <!-- <a href="#">{{ category.name }}</a> -->
+      <RouterLink :to="`/category/${category.id}`">
+        {{ category.name }}
+      </RouterLink>
       <div class="layer">
         <ul>
           <li v-for="item in category.children" :key="item.id">
-            <a href="#">
+            <!-- <a href="#">
               <img :src="item.picture" alt="" />
               <p>{{ item.name }}</p>
-            </a>
+            </a> -->
+            <RouterLink :to="`/category/sub/${item.id}`">
+              <img :src="item.picture" alt="" />
+              <p>{{ item.name }}</p>
+            </RouterLink>
           </li>
         </ul>
       </div>
