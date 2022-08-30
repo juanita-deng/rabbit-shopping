@@ -23,7 +23,7 @@ export default {
   actions: {
     async getList({ commit }) {
       const { result } = await findAllCategory()
-      // 给list添加open属性,用于动态控制🎧分类弹窗的展示和隐藏
+      // 给list添加open属性,用于动态控制二级分类弹窗的展示和隐藏
       result.forEach((v) => (v.open = false))
       commit('setList', result)
     }
