@@ -1,9 +1,10 @@
 import { findAllCategory } from '@/api/category'
+import { defaultCategory } from '@/api/constant'
 export default {
   namespaced: true,
   state: () => {
     return {
-      list: []
+      list: defaultCategory.map((v) => ({ name: v }))
     }
   },
   mutations: {
