@@ -1,40 +1,35 @@
 <template>
   <ul class="navs">
-    <li class="home"><RouterLink to="/">首页</RouterLink></li>
-    <li>
-      <a href="#">美食</a>
+    <!-- 注意:首页是写死的 -->
+    <li class="home">
+      <RouterLink to="/"> 首页</RouterLink>
+    </li>
+    <li class="home" v-for="category in categoryList" :key="category.id">
+      <a href="#">{{ category.name }}</a>
       <div class="layer">
         <ul>
-          <li v-for="i in 10" :key="i">
+          <li v-for="item in category.children" :key="item.id">
             <a href="#">
-              <img
-                src="https://yanxuan.nosdn.127.net/cc361cf40d4f81c7eccefed1ad18face.png?quality=95&imageView"
-                alt=""
-              />
-              <p>果干</p>
+              <img :src="item.picture" alt="" />
+              <p>{{ item.name }}</p>
             </a>
           </li>
         </ul>
       </div>
     </li>
-    <li><a href="#">餐厨</a></li>
-    <li><a href="#">艺术</a></li>
-    <li><a href="#">电器</a></li>
-    <li><a href="#">居家</a></li>
-    <li><a href="#">洗护</a></li>
-    <li><a href="#">孕婴</a></li>
-    <li><a href="#">服装</a></li>
-    <li><a href="#">杂货</a></li>
   </ul>
 </template>
 <script>
+import { computed } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
   name: 'first-category',
   setup() {
+    // 获得store 类似this.$store
     const store = useStore()
-    const categoryList = store.state.category.list
+    // 把store中的state映射为组件的计算属性,为了保持dom的及时更新
+    const categoryList = computed(() => store.state.category.list)
     return {
       categoryList
     }
