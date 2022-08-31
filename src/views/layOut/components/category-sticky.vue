@@ -12,22 +12,13 @@
   </div>
 </template>
 <script>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useWindowScroll } from '@/hooks'
 import FirstCategory from './first-category.vue'
 export default {
   name: 'category-sticky',
   components: { FirstCategory },
   setup() {
-    const y = ref(0)
-    const onscroll = () => {
-      y.value = window.pageYOffset // 或者使用  document.documentElement.scrollTop
-    }
-    onMounted(() => {
-      window.addEventListener('scroll', onscroll)
-    })
-    onBeforeUnmount(() => {
-      window.removeEventListener('scroll', onscroll)
-    })
+    const { y } = useWindowScroll()
     return {
       y
     }
