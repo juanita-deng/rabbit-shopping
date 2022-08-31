@@ -1,7 +1,10 @@
 <template>
   <div class="home-banner">
-    <!-- 轮播图 -->
-    <RabbitCarousel />
+    <!-- 轮播图
+     autoPlay 控制是否自动播放
+     duration 轮播图切换的市场
+    -->
+    <RabbitCarousel :swiperList="swiperList" autoPlay :duration="3000" />
   </div>
 </template>
 <script>

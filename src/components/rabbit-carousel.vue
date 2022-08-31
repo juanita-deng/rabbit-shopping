@@ -1,28 +1,13 @@
 <template>
   <div class="xtx-carousel">
     <ul class="carousel-body">
-      <li class="carousel-item fade">
-        <RouterLink to="/">
-          <img
-            src="http://yjy-xiaotuxian-dev.oss-cn-beijing.aliyuncs.com/picture/2021-04-15/1ba86bcc-ae71-42a3-bc3e-37b662f7f07e.jpg"
-            alt=""
-          />
-        </RouterLink>
-      </li>
-      <li class="carousel-item">
-        <RouterLink to="/">
-          <img
-            src="http://yjy-xiaotuxian-dev.oss-cn-beijing.aliyuncs.com/picture/2021-04-15/1ba86bcc-ae71-42a3-bc3e-37b662f7f07e.jpg"
-            alt=""
-          />
-        </RouterLink>
-      </li>
-      <li class="carousel-item">
-        <RouterLink to="/">
-          <img
-            src="http://yjy-xiaotuxian-dev.oss-cn-beijing.aliyuncs.com/picture/2021-04-15/1ba86bcc-ae71-42a3-bc3e-37b662f7f07e.jpg"
-            alt=""
-          />
+      <li
+        :class="['carousel-item', { fade: active === index }]"
+        v-for="(item, index) in swiperList"
+        :key="item.id"
+      >
+        <RouterLink :to="item.hrefUrl">
+          <img :src="item.imgUrl" alt="" />
         </RouterLink>
       </li>
     </ul>
@@ -33,18 +18,37 @@
       ><i class="iconfont icon-angle-right"></i
     ></a>
     <div class="carousel-indicator">
-      <span class="active"></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+      <span
+        :class="{ active: active === index }"
+        v-for="(item, index) in swiperList"
+        :key="item.id"
+      ></span>
     </div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue'
 export default {
-  name: 'RabbitCarousel'
+  props: {
+    swiperList: {
+      type: Array,
+      default: () => []
+    },
+    autoPlay: {
+      type: Boolean,
+      default: false
+    },
+    duration: {
+      type: Number,
+      default: 2000
+    }
+  },
+  name: 'RabbitCarousel',
+  setup() {
+    const active = ref(0)
+    return { active }
+  }
 }
 </script>
 <style scoped lang="less">
