@@ -8,7 +8,7 @@ import '@/assets/styles/common.less'
 // 导入模拟mock数据(会优先走本地mock数据,接口调通后可删除)
 // import './mock'
 
-import rabbitUI from '@/components/library/index'
+import rabbitUI from '@/components/index'
 // import XtxSkeleton from '@/components/library/rabbit-skeleton.vue'
 createApp(App)
   .use(store)
