@@ -12,7 +12,8 @@
   </div>
 </template>
 <script>
-import { useWindowScroll } from '@/hooks'
+// import { useWindowScroll } from '@/hooks'
+import { useWindowScroll } from '@vueuse/core'
 import FirstCategory from './first-category.vue'
 export default {
   name: 'category-sticky',
