@@ -13,6 +13,9 @@
 </template>
 <script>
 // import { useWindowScroll } from '@/hooks'
+/**
+ *  @vueuse/core使用方法:https://www.npmjs.com/package/@vueuse/core
+ */
 import { useWindowScroll } from '@vueuse/core'
 import FirstCategory from './first-category.vue'
 export default {
