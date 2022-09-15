@@ -4,7 +4,7 @@
      autoPlay 控制是否自动播放
      duration 轮播图切换的市场
     -->
-    <RabbitCarousel :swiperList="swiperList" autoPlay :duration="3000" />
+    <RabbitCarousel :swiperList="swiperList" autoPlay :duration="1000" />
   </div>
 </template>
 <script>
@@ -29,7 +29,7 @@ export default {
   left: 0;
   top: 0;
   z-index: 98;
-  background-color: pink;
+  // background-color: pink;
   ::v-deep .xtx-carousel {
     .carousel-btn.prev {
       left: 270px;

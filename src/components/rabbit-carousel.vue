@@ -1,5 +1,5 @@
 <template>
-  <div class="xtx-carousel">
+  <div class="xtx-carousel" @mouseenter="stop" @mouseleave="play">
     <ul class="carousel-body">
       <li
         :class="['carousel-item', { fade: active === index }]"
@@ -11,24 +11,35 @@
         </RouterLink>
       </li>
     </ul>
-    <a href="javascript:;" class="carousel-btn prev"
-      ><i class="iconfont icon-angle-left"></i
-    ></a>
-    <a href="javascript:;" class="carousel-btn next"
-      ><i class="iconfont icon-angle-right"></i
-    ></a>
+    <a
+      href="javascript:;"
+      class="carousel-btn prev"
+      :class="{ disabled: active === 0 }"
+      @click="prev"
+    >
+      <i class="iconfont icon-angle-left"></i>
+    </a>
+    <a
+      href="javascript:;"
+      class="carousel-btn next"
+      :class="{ disabled: active === 1 }"
+      @click="next"
+    >
+      <i class="iconfont icon-angle-right"></i>
+    </a>
     <div class="carousel-indicator">
       <span
         :class="{ active: active === index }"
         v-for="(item, index) in swiperList"
+        @mouseenter="active = index"
         :key="item.id"
-      ></span>
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 export default {
   props: {
     swiperList: {
@@ -45,9 +56,38 @@ export default {
     }
   },
   name: 'RabbitCarousel',
-  setup() {
+  setup(props, context) {
     const active = ref(0)
-    return { active }
+    const prev = () => {
+      if (active.value === 0) {
+        active.value = props.swiperList.length - 1
+      } else {
+        active.value--
+      }
+    }
+    const next = () => {
+      if (active.value === props.swiperList.length - 1) {
+        active.value = 0
+      } else {
+        active.value++
+      }
+    }
+    let timer = null
+    const play = () => {
+      if (!props.autoPlay) return
+      clearInterval(timer) // 防止开启多个定时器
+      timer = setInterval(() => {
+        next()
+      }, props.duration)
+    }
+    const stop = () => {
+      clearInterval(timer)
+    }
+    // 页面开始时开启自动播放
+    onMounted(() => play())
+    // 组件销毁时关闭自动播放
+    onUnmounted(() => stop())
+    return { active, prev, next, play, stop }
   }
 }
 </script>
