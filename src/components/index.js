@@ -6,15 +6,17 @@
  * @author juanit-deng
  * @time 2022-08-31
  * */
-import XtxSkeleton from '@/components/rabbit-skeleton.vue'
+import RabbitSkeleton from '@/components/rabbit-skeleton.vue'
 import RabbitCarousel from '@/components/rabbit-carousel.vue'
+import RabbitMore from '@/components/rabbit-more.vue'
 export default {
   install(app) {
     /*
         在app上进行扩展，app提供 component directive 函数
         如果要挂载原型 app.config.globalProperties 方式
     */
-    app.component(XtxSkeleton.name, XtxSkeleton)
+    app.component(RabbitSkeleton.name, RabbitSkeleton)
     app.component(RabbitCarousel.name, RabbitCarousel)
+    app.component(RabbitMore.name, RabbitMore)
   }
 }
