@@ -35,3 +35,15 @@ export const getFreshGoods = () => {
     url: '/home/new'
   })
 }
+
+/**
+ * 获取首页人气推荐数据
+ * @param
+ * @returns promise
+ */
+export const getHotGoods = () => {
+  return request({
+    method: 'get',
+    url: '/home/hot'
+  })
+}
