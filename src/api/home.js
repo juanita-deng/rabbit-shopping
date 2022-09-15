@@ -23,3 +23,15 @@ export const getBannerList = () => {
     url: '/home/banner'
   })
 }
+
+/**
+ * 获取首页新鲜好物数据
+ * @param
+ * @returns promise
+ */
+export const getFreshGoods = () => {
+  return request({
+    method: 'get',
+    url: '/home/new'
+  })
+}
