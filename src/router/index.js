@@ -15,7 +15,8 @@ const routes = [
       }
     ]
   },
-  { path: '/login', component: () => import('@/views/login/index') } // 路由懒加载
+  { path: '/login', component: () => import('@/views/login/index') }, // 路由懒加载
+  { path: '/test', component: () => import('@/views/test/animation.vue') }
 ]
 
 const router = createRouter({

@@ -26,7 +26,6 @@ export default {
     const hotGoods = ref([])
     getHotGoods().then(({ result }) => {
       hotGoods.value = result
-      console.log('res', result)
     })
     return { hotGoods }
   }
