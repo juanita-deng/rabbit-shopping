@@ -7,8 +7,8 @@
       :style="{ backgroundColor: '#f0f9f4' }"
     >
       <RabbitSkeleton bg="#e4e4e4" width="306px" height="306px" animated />
-      <XtxSkeleton bg="#e4e4e4" width="160px" height="24px" animated />
-      <XtxSkeleton bg="#e4e4e4" width="120px" height="24px" animated />
+      <RabbitSkeleton bg="#e4e4e4" width="160px" height="24px" animated />
+      <RabbitSkeleton bg="#e4e4e4" width="120px" height="24px" animated />
     </div>
   </div>
 </template>
