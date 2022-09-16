@@ -1,6 +1,6 @@
 <template>
   <HomePanel title="人气推荐" sub-title="人气爆款 不容错过">
-    <ul ref="pannel" class="goods-list">
+    <ul ref="pannel" class="goods-list" v-if="hotGoods.length">
       <li v-for="item in hotGoods" :key="item.id">
         <RouterLink to="/">
           <img :src="item.picture" alt="" />
@@ -9,15 +9,18 @@
         </RouterLink>
       </li>
     </ul>
+    <HomeSkeleton v-else />
   </HomePanel>
 </template>
 <script>
 import { ref } from 'vue'
 import HomePanel from './home-panel.vue'
+import HomeSkeleton from './home-skeleton.vue'
 import { getHotGoods } from '@/api/home'
 export default {
   components: {
-    HomePanel
+    HomePanel,
+    HomeSkeleton
   },
   setup() {
     const hotGoods = ref([])

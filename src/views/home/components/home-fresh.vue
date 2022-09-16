@@ -2,7 +2,7 @@
   <HomePanel title="新鲜好物" subTitle="新鲜出炉 品质靠谱">
     <template #right><RabbitMore /></template>
     <!-- 面板内容 -->
-    <ul class="goods-list">
+    <ul class="goods-list" v-if="freshGoodsList.length">
       <li v-for="item in freshGoodsList" :key="item.id">
         <RouterLink to="/">
           <img :src="item.picture" alt="" />
@@ -11,14 +11,16 @@
         </RouterLink>
       </li>
     </ul>
+    <HomeSkeleton v-else />
   </HomePanel>
 </template>
 <script>
 import { ref } from 'vue'
 import HomePanel from './home-panel.vue'
+import HomeSkeleton from './home-skeleton.vue'
 import { getFreshGoods } from '@/api/home'
 export default {
-  components: { HomePanel },
+  components: { HomePanel, HomeSkeleton },
   setup() {
     const freshGoodsList = ref([])
     getFreshGoods().then(({ result }) => {
