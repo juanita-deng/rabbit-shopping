@@ -2,16 +2,18 @@
   <HomePanel title="新鲜好物" subTitle="新鲜出炉 品质靠谱">
     <template #right><RabbitMore /></template>
     <!-- 面板内容 -->
-    <ul class="goods-list" v-if="freshGoodsList.length">
-      <li v-for="item in freshGoodsList" :key="item.id">
-        <RouterLink to="/">
-          <img :src="item.picture" alt="" />
-          <p class="name ellipsis">{{ item.name }}</p>
-          <p class="price">&yen;{{ item.price }}</p>
-        </RouterLink>
-      </li>
-    </ul>
-    <HomeSkeleton v-else />
+    <Transition name="fade">
+      <ul class="goods-list" v-if="freshGoodsList.length">
+        <li v-for="item in freshGoodsList" :key="item.id">
+          <RouterLink to="/">
+            <img :src="item.picture" alt="" />
+            <p class="name ellipsis">{{ item.name }}</p>
+            <p class="price">&yen;{{ item.price }}</p>
+          </RouterLink>
+        </li>
+      </ul>
+      <HomeSkeleton v-else />
+    </Transition>
   </HomePanel>
 </template>
 <script>
