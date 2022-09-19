@@ -1,68 +1,88 @@
 <template>
   <button @click="handleClick">显隐</button>
-  <transition>
-    <div class="test" v-show="show"></div>
+  <transition name="bounce">
+    <div class="test" v-show="show">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat
+      asperiores necessitatibus eaque quia nam, recusandae temporibus itaque
+      accusamus quibusdam! Excepturi laboriosam recusandae impedit fugit
+      accusantium labore magni rem numquam veritatis?
+    </div>
   </transition>
   <hr />
-  <button @click="show1 = !show1">有名称的动画</button>
-  <!-- 多个transition使用不同动画，可以添加name属性，name属性的值替换v即可。 -->
-  <transition name="fade">
-    <div class="test1" v-if="show1"></div>
-  </transition>
+  <button @click="shake = !shake">摇晃</button>
+  <Transition name="shake">
+    <div class="shake" v-if="shake">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil tenetur
+      libero deserunt nemo voluptatum adipisci, vero omnis maxime. Illo
+      voluptatum velit, nobis blanditiis quaerat minima tenetur similique! Harum
+      aliquam in sapiente iure eos quos eligendi architecto magnam quas quae ab
+      ipsa, cum, facilis voluptas iste! Mollitia ipsam rem deleniti sed.
+    </div>
+  </Transition>
 </template>
 <script>
 import { ref } from 'vue'
 export default {
-  /**
+  /** 若是动画的话只有两个类名
    * - 进入（显示，创建）
-   *   v-enter-from 进入前 （vue2.0 v-enter）
    *   v-enter-active 进入中
-   *   v-enter-to 进入后
    * - 离开（隐藏，移除）
-   *   v-leave-from 进入前 （vue2.0 v-leave）
    *   v-leave-active 进入中
-   *   v-leave-to 进入后
    */
   setup() {
     const show = ref(true)
-    const show1 = ref(true)
+    const shake = ref(true)
     const handleClick = () => {
       show.value = !show.value
     }
-    return { show, handleClick, show1 }
+    return { show, handleClick, shake }
   }
 }
 </script>
 <style scoped lang="less">
 .test,
-.test1 {
-  width: 100px;
-  height: 100px;
-  background-color: pink;
+.shake {
+  width: 400px;
 }
-.v-leave-to,
-.v-enter-from {
-  opacity: 0;
+@keyframes bounce {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
-.v-leave-active,
-.v-enter-active {
-  transition: all 2s;
+.bounce-leave-active {
+  animation: bounce 1s reverse ease-in;
 }
-.v-leave-from,
-.v-enter-to {
-  opacity: 1;
-}
-.fade-leave-to,
-.fade-enter-from {
-  transform: translateX(-100px);
-}
-.fade-leave-from,
-.fade-enter-to {
-  transform: translateX(0);
+.bounce-enter-active {
+  animation: bounce 1s ease-out both;
 }
 
-.fade-leave-active,
-.fade-enter-active {
-  transition: all 2s;
+.shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+}
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 </style>
