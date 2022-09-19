@@ -10,7 +10,7 @@
           </RouterLink>
         </li>
       </ul>
-      <HomeSkeleton v-else />
+      <HomeSkeleton v-else bg="#fff" />
     </Transition>
   </HomePanel>
 </template>
