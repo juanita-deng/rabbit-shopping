@@ -10,5 +10,12 @@ module.exports = {
       preProcessor: 'less',
       patterns: [path.join(__dirname, 'src/assets/styles/variables.less'), path.join(__dirname, 'src/assets/styles/mixins.less')]
     }
+  },
+  devServer: {
+    overlay: {
+      errors: false, // 关闭页面的错误警告提示
+      warnings: false
+    }
+
   }
 }

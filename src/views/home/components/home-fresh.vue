@@ -1,5 +1,5 @@
 <template>
-  <HomePanel title="新鲜好物" subTitle="新鲜出炉 品质靠谱">
+  <HomePanel title="新鲜好物" subTitle="新鲜出炉 品质靠谱" ref="target">
     <template #right><RabbitMore /></template>
     <!-- 面板内容 -->
     <Transition name="fade">
@@ -17,18 +17,23 @@
   </HomePanel>
 </template>
 <script>
-import { ref } from 'vue'
+// import { ref } from 'vue'
 import HomePanel from './home-panel.vue'
 import HomeSkeleton from './home-skeleton.vue'
 import { getFreshGoods } from '@/api/home'
+import { useLazyLoad } from '@/hooks/index'
 export default {
   components: { HomePanel, HomeSkeleton },
   setup() {
-    const freshGoodsList = ref([])
-    getFreshGoods().then(({ result }) => {
-      freshGoodsList.value = result
-    })
-    return { freshGoodsList }
+    // 未使用懒加载写法
+    // const freshGoodsList = ref([])
+    // getFreshGoods().then(({ result }) => {
+    //   freshGoodsList.value = result
+    // })
+
+    // 使用懒加载封装后的写法
+    const { target, list: freshGoodsList } = useLazyLoad(getFreshGoods)
+    return { freshGoodsList, target }
   }
 }
 </script>
