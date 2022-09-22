@@ -59,6 +59,10 @@ export default {
             if (isIntersecting) {
               // 停止监听
               observer.unobserve(el)
+              // 图片加载失败给的默认图
+              el.onerror = () => {
+                el.src = require('@/assets/images/200.png')
+              }
               // 给el元素添加src属性
               el.src = value
             }
