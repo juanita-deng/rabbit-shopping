@@ -18,14 +18,14 @@
           </strong>
         </RouterLink>
         <ul class="goods-list">
-          <li v-for="goods in prod.goods" :key="goods.id">
+          <li v-for="good in prod.goods" :key="good.id">
             <div class="goods-item">
               <RouterLink to="/" class="image">
-                <img :src="goods.picture" alt="" />
+                <img :src="good.picture" alt="" />
               </RouterLink>
-              <p class="name ellipsis-2">{{ goods.name }}</p>
-              <p class="desc ellipsis">{{ goods.desc }}</p>
-              <p class="price">&yen;{{ goods.price }}</p>
+              <p class="name ellipsis-2">{{ good.name }}</p>
+              <p class="desc ellipsis">{{ good.desc }}</p>
+              <p class="price">&yen;{{ good.price }}</p>
               <div class="extra">
                 <RouterLink to="/">
                   <span>找相似</span>

@@ -33,6 +33,9 @@ export default {
      * @param 参数1:target,观察的目标dom容器(必须是dom)
      * @param 参数2:回调函数 isIntersecting 是否进入可视区(true是 / false否)
      *             observerElement 被观察的dom
+     * @param 参数3:threshold
+     *        - 产品区域需要滚动比较多才能去加载数据。
+     *        - threshold 容器和可视区交叉的占比（进入的面积/容器完整面试） 取值，0-1 之间，默认比0大，所以需要滚动较多才能触发进入可视区域事件。
      */
     // const { stop } = useIntersectionObserver(target, ([{ isIntersecting }], observerElement) => {
     //   //此处判断进入可视区后开始发请求拿数据

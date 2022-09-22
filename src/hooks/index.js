@@ -21,17 +21,19 @@ export const useWindowScroll = () => {
  * useIntersectionObserver 官方文档:https://vueuse.org/core/useintersectionobserver/#demo
  */
 export const useLazyLoad = (apiFn) => {
-  const target = ref(null)// 被观察的对象
-  const list = ref([])// 不同的API函数
+  const target = ref(null) // 被观察的对象
+  const list = ref([]) // 不同的API函数
   const { stop } = useIntersectionObserver(
     target,
     ([{ isIntersecting }], observerElement) => {
       if (isIntersecting) {
         stop()
-        apiFn().then(data => {
+        apiFn().then((data) => {
           list.value = data.result
         })
       }
-    })
+    },
+    { threshold: 0 }
+  )
   return { target, list }
 }
