@@ -59,3 +59,14 @@ export const getProduct = () => {
     url: '/home/goods'
   })
 }
+
+/**
+ * 获取专题数据
+ * @returns Promise
+ */
+export function getSpecial() {
+  return request({
+    method: 'get',
+    url: 'home/special'
+  })
+}

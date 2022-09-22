@@ -15,6 +15,8 @@
       <HomeBrand />
       <!-- 商品区域 -->
       <HomeProduct />
+      <!-- 最新专题 -->
+      <HomeSpecial />
     </div>
   </div>
 </template>
@@ -25,6 +27,7 @@ import HomeFresh from './components/home-fresh.vue'
 import HomeHot from './components/home-hot.vue'
 import HomeBrand from './components/home-brand.vue'
 import HomeProduct from './components/home-product.vue'
+import HomeSpecial from './components/home-special.vue'
 export default {
   name: 'home',
   components: {
@@ -33,7 +36,8 @@ export default {
     HomeFresh,
     HomeHot,
     HomeBrand,
-    HomeProduct
+    HomeProduct,
+    HomeSpecial
   }
 }
 </script>
