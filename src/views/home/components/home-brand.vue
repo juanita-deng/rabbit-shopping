@@ -1,12 +1,24 @@
 <template>
   <HomePanel title="热门品牌" subTitle="国际经典 品质保证" ref="target">
     <template v-slot:right>
-      <a href="javascript:;" class="iconfont icon-angle-left prev"></a>
-      <a href="javascript:;" class="iconfont icon-angle-right next"></a>
+      <a
+        href="javascript:;"
+        :class="['iconfont icon-angle-left prev', { disabled: index === 0 }]"
+        @click="prev"
+      ></a>
+      <a
+        href="javascript:;"
+        :class="['iconfont icon-angle-right next', { disabled: index === 1 }]"
+        @click="next"
+      ></a>
     </template>
     <div class="box" ref="box">
       <Transition name="fade">
-        <ul class="list" v-if="list.length">
+        <ul
+          class="list"
+          :style="{ transform: `translateX(${-index * 1240}px)` }"
+          v-if="list.length"
+        >
           <li v-for="(item, index) in list" :key="index">
             <RouterLink to="/">
               <img :src="item.picture" alt="" />
@@ -32,6 +44,7 @@
 import { useLazyLoad } from '@/hooks'
 import HomePanel from './home-panel.vue'
 import { getBrandList } from '@/api/home'
+import { ref } from 'vue'
 export default {
   components: { HomePanel },
   setup() {
@@ -42,7 +55,16 @@ export default {
 
     // 省略写法
     const { target, list } = useLazyLoad(() => getBrandList(10))
-    return { target, list }
+    const prev = () => {
+      if (index.value === 0) return
+      index.value--
+    }
+    const index = ref(0)
+    const next = () => {
+      if (index.value === 1) return
+      index.value++
+    }
+    return { target, list, prev, next, index }
   }
 }
 </script>
