@@ -21,7 +21,7 @@
         >
           <li v-for="(item, index) in list" :key="index">
             <RouterLink to="/">
-              <img :src="item.picture" alt="" />
+              <img v-lazy="item.picture" alt="" />
             </RouterLink>
           </li>
         </ul>

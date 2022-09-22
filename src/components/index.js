@@ -27,14 +27,47 @@ export default {
      * @return 返回导入的函数fn
      * @method .keys()获取读取到的所有文件列表
      */
-    // 加载components下所有的vue文件
+    // 1.加载components下所有的vue文件
     const ctx = require.context('./', false, /\.vue$/)
-    // console.log('ctx', ctx)
     ctx.keys().forEach((path) => {
       // path 组件的地址
       const component = ctx(path).default
-      // console.log('component', component)
       app.component(component.name, component)
+    })
+
+    // 2.自定义指令 聚焦
+    app.directive('focus', {
+      mounted(el) {
+        el.focus()
+      }
+    })
+    // 3.自定义指令 图片懒加载
+    /**
+     * IntersectionObserver构造器
+     * 参考文档:https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver/IntersectionObserver
+     * @param 参数1:回调函数, 返回值:1.entries:被监听对应的数组 2.observer:被调用的实例
+     * @param 参数2:配置  1.root基于的滚动容器，默认是document 2.rootMargin容器有没有外边距  3.threshold 交叉界的阈值
+     * @returns 一个可以使用规定阈值监听目标元素可见部分与root交叉状况的新的IntersectionObserver 实例。
+     *        提供两个方法:observe(dom) 观察哪个dom
+     *                   unobserve(dom) 停止观察那个dom
+     */
+    app.directive('lazy', {
+      mounted(el, { value }) {
+        // 图片的懒加载逻辑
+        const observer = new IntersectionObserver(
+          ([{ isIntersecting }], observer) => {
+            if (isIntersecting) {
+              // 停止监听
+              observer.unobserve(el)
+              // 给el元素添加src属性
+              el.src = value
+            }
+          },
+          { threshold: 0.1 }
+        )
+        // 调用自身的observe() 方法开始使用规定的阈值监听指定目标。
+        observer.observe(el)
+      }
     })
   }
 }
