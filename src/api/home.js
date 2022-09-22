@@ -47,3 +47,15 @@ export const getHotGoods = () => {
     url: '/home/hot'
   })
 }
+
+/**
+ * 获取商品数据
+ * @param
+ * @returns promise
+ */
+export const getProduct = () => {
+  return request({
+    method: 'get',
+    url: '/home/goods'
+  })
+}

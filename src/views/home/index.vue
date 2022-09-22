@@ -13,6 +13,8 @@
       <HomeHot />
       <!-- 热门品牌 -->
       <HomeBrand />
+      <!-- 商品区域 -->
+      <HomeProduct />
     </div>
   </div>
 </template>
@@ -22,9 +24,17 @@ import HomeCategory from './components/home-category.vue'
 import HomeFresh from './components/home-fresh.vue'
 import HomeHot from './components/home-hot.vue'
 import HomeBrand from './components/home-brand.vue'
+import HomeProduct from './components/home-product.vue'
 export default {
   name: 'home',
-  components: { HomeCategory, HomeBanner, HomeFresh, HomeHot, HomeBrand }
+  components: {
+    HomeCategory,
+    HomeBanner,
+    HomeFresh,
+    HomeHot,
+    HomeBrand,
+    HomeProduct
+  }
 }
 </script>
 <style lang="less" scoped></style>
