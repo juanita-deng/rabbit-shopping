@@ -4,19 +4,19 @@
       <a
         href="javascript:;"
         :class="['iconfont icon-angle-left prev', { disabled: index === 0 }]"
-        @click="prev"
+        @click="index = 0"
       ></a>
       <a
         href="javascript:;"
         :class="['iconfont icon-angle-right next', { disabled: index === 1 }]"
-        @click="next"
+        @click="index = 1"
       ></a>
     </template>
     <div class="box" ref="box">
       <Transition name="fade">
         <ul
           class="list"
-          :style="{ transform: `translateX(${-index * 1240}px)` }"
+          :style="{ transform: `translateX(${-index * 50}%)` }"
           v-if="list.length"
         >
           <li v-for="(item, index) in list" :key="index">
@@ -55,16 +55,8 @@ export default {
 
     // 省略写法
     const { target, list } = useLazyLoad(() => getBrandList(10))
-    const prev = () => {
-      if (index.value === 0) return
-      index.value--
-    }
     const index = ref(0)
-    const next = () => {
-      if (index.value === 1) return
-      index.value++
-    }
-    return { target, list, prev, next, index }
+    return { target, list, index }
   }
 }
 </script>
