@@ -45,11 +45,12 @@
       </template>
       <div class="form-item">
         <div class="agree">
-          <XtxCheckbox />
-          <span>我已同意</span>
-          <a href="javascript:;">《隐私条款》</a>
-          <span>和</span>
-          <a href="javascript:;">《服务条款》</a>
+          <RabbitCheckbox v-model="check" @change="change">
+            <span>我已同意</span>
+            <a href="javascript:;">《隐私条款》</a>
+            <span>和</span>
+            <a href="javascript:;">《服务条款》</a>
+          </RabbitCheckbox>
         </div>
       </div>
       <a href="javascript:;" class="btn">登录</a>
@@ -74,8 +75,14 @@ export default {
   name: 'LoginForm',
   setup() {
     const isAccountLogin = ref(true)
+    const check = ref(true)
+    const change = () => {
+      console.log('变化')
+    }
     return {
-      isAccountLogin
+      isAccountLogin,
+      check,
+      change
     }
   }
 }
