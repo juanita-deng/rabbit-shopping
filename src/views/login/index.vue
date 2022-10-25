@@ -20,7 +20,9 @@
           </a>
         </nav>
         <!-- 表单 -->
-        <div v-if="activeName === 'account'" class="account-box">表单</div>
+        <div v-if="activeName === 'account'" class="account-box">
+          <LoginForm />
+        </div>
         <!-- 二维码 -->
         <div v-else class="qrcode-box">
           <img src="@/assets/images/qrcode.jpg" alt="" />
@@ -34,14 +36,17 @@
 <script>
 import LoginHeader from './components/login-header.vue'
 import LoginFooter from './components/login-footer.vue'
+import LoginForm from './components/login-form.vue'
 import { ref } from 'vue'
 export default {
   name: 'PageLogin',
   components: {
     LoginHeader,
-    LoginFooter
+    LoginFooter,
+    LoginForm
   },
   setup() {
+    // account:使用账户登录  qrcode:使用二维码登录
     const activeName = ref('account')
     return { activeName }
   }
