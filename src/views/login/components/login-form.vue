@@ -3,58 +3,100 @@
     <div class="toggle">
       <a
         href="javascript:;"
-        v-if="isAccountLogin"
-        @click="isAccountLogin = false"
+        v-if="!isAccountLogin"
+        @click="isAccountLogin = true"
       >
         <i class="iconfont icon-user"></i> 使用账号登录
       </a>
-      <a href="javascript:;" v-else @click="isAccountLogin = true">
+      <a href="javascript:;" v-else @click="isAccountLogin = false">
         <i class="iconfont icon-msg"></i> 使用短信登录
       </a>
     </div>
-    <div class="form">
-      <template v-if="isAccountLogin">
-        <div class="form-item">
-          <div class="input">
-            <i class="iconfont icon-user"></i>
-            <input type="text" placeholder="请输入用户名或手机号" />
+    <!-- v-slot:为作用域插槽的返回值 -->
+    <Form ref="target" :validation-schema="validateRules" v-slot="{ errors }" autocomplete="off">
+      <div class="form">
+        <template v-if="isAccountLogin">
+          <div class="form-item">
+            <div class="input">
+              <i class="iconfont icon-user"></i>
+              <Field
+                v-model="form.account"
+                autocomplete="off"
+                name="account"
+                type="text"
+                :class="{ error: errors.account }"
+                placeholder="请输入用户名或手机号"
+              />
+            </div>
+            <div class="error" v-if="errors.account">
+              <i class="iconfont icon-warning" />{{ errors.account }}
+            </div>
           </div>
-          <!-- <div class="error"><i class="iconfont icon-warning" />请输入手机号</div> -->
-        </div>
-        <div class="form-item">
-          <div class="input">
-            <i class="iconfont icon-lock"></i>
-            <input type="password" placeholder="请输入密码" />
+          <div class="form-item">
+            <div class="input">
+              <i class="iconfont icon-lock"></i>
+              <Field
+                type="password"
+                placeholder="请输入密码"
+                name="password"
+                :class="{ error: errors.password }"
+                v-model="form.password"
+              />
+            </div>
+            <div class="error" v-if="errors.password">
+              <i class="iconfont icon-warning" />{{ errors.password }}
+            </div>
           </div>
-        </div>
-      </template>
-      <template v-else>
-        <div class="form-item">
-          <div class="input">
-            <i class="iconfont icon-user"></i>
-            <input type="text" placeholder="请输入手机号" />
+        </template>
+        <template v-else>
+          <div class="form-item">
+            <div class="input">
+              <i class="iconfont icon-user"></i>
+              <Field
+                type="text"
+                placeholder="请输入手机号"
+                name="mobile"
+                :class="{ error: errors.mobile }"
+                v-model="form.mobile"
+              />
+            </div>
+            <div class="error" v-if="errors.mobile">
+              <i class="iconfont icon-warning" />{{ errors.mobile }}
+            </div>
           </div>
-        </div>
-        <div class="form-item">
-          <div class="input">
-            <i class="iconfont icon-code"></i>
-            <input type="password" placeholder="请输入验证码" />
-            <span class="code">发送验证码</span>
+          <div class="form-item">
+            <div class="input">
+              <i class="iconfont icon-code"></i>
+              <Field
+                type="password"
+                placeholder="请输入验证码"
+                name="code"
+                :class="{ error: errors.code }"
+                v-model="form.code"
+              />
+              <span class="code">发送验证码</span>
+            </div>
+            <div class="error" v-if="errors.code">
+              <i class="iconfont icon-warning" />{{ errors.code }}
+            </div>
           </div>
-        </div>
-      </template>
-      <div class="form-item">
-        <div class="agree">
-          <RabbitCheckbox v-model="check" @change="change">
+        </template>
+        <div class="form-item">
+          <div class="agree">
+            <!-- as: 指定渲染的元素,可以为组件或者div/span等标签 -->
+            <Field as="RabbitCheckbox" name="isAgree" v-model="form.isAgree" />
             <span>我已同意</span>
             <a href="javascript:;">《隐私条款》</a>
             <span>和</span>
             <a href="javascript:;">《服务条款》</a>
-          </RabbitCheckbox>
+          </div>
+          <div class="error" v-if="errors.isAgree">
+            <i class="iconfont icon-warning" />{{ errors.isAgree }}
+          </div>
         </div>
+        <a href="javascript:;" class="btn" @click="login">登录</a>
       </div>
-      <a href="javascript:;" class="btn">登录</a>
-    </div>
+    </Form>
     <div class="action">
       <img
         src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
@@ -69,20 +111,53 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-
+import { ref, reactive } from 'vue'
+import { Form, Field, configure } from 'vee-validate'
+import { mobile, account, isAgree, password, code } from '@/utils/validate'
+// 校验时机的配置
+configure({
+  validateOnInput: true // 修改触发的时机,默认失焦时触发
+})
 export default {
   name: 'LoginForm',
+  components: { Form, Field },
   setup() {
     const isAccountLogin = ref(true)
-    const check = ref(true)
-    const change = () => {
-      console.log('变化')
+    /**
+     * vee-validate的使用----> https://vee-validate.logaretm.com/v4
+     * 注意:npm i vee-validate 下载的默认是vue2的版本,4.x对应的是vue3
+     *      yarn add vee-validate@4.0.3
+     */
+    const form = reactive({
+      mobile: '',
+      account: '',
+      password: '',
+      code: '',
+      isAgree: false
+    })
+
+    const validateRules = {
+      // 校验的时候，如果返回true，校验通过
+      // 如果返回的不是true，而是其他值，校验失败，而且返回值就是校验的提示信息
+      mobile,
+      account,
+      isAgree,
+      password,
+      code
+    }
+    // 对整个表单进行校验
+    const target = ref(null)
+    const login = () => {
+      target.value.validate().then((res) => {
+        console.log('res', res)
+      })
     }
     return {
       isAccountLogin,
-      check,
-      change
+      validateRules,
+      form,
+      target,
+      login
     }
   }
 }
