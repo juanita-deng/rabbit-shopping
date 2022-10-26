@@ -49,7 +49,12 @@ export default {
       //   emit('update:modelValue', !props.modelValue)
 
       // 支持change事件
-      emit('change', checked.value)
+      // 方式一
+      //   emit('change', checked.value) // 注意:此处的checked用的是方式一中的checked
+      // 方式二
+      //   emit('change', !props.modelValue)
+      // 方式三
+      emit('change', !checked.value)
     }
     return { checked, change }
   }
