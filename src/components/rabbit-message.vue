@@ -1,10 +1,13 @@
 <template>
-  <div class="rabbit-message" :style="style[type]">
-    <i  :class="['iconfont',style[type].icon]"></i>
-    <span class="text">{{ text }}</span>
-  </div>
+  <transition name="down">
+    <div class="rabbit-message" :style="style[type]" v-show="isShow">
+      <i :class="['iconfont', style[type].icon]"></i>
+      <span class="text">{{ text }}</span>
+    </div>
+  </transition>
 </template>
 <script>
+import { onMounted, ref } from 'vue'
 export default {
   name: 'RabbitMessage',
   props: {
@@ -39,11 +42,30 @@ export default {
         borderColor: 'rgb(225, 243, 216)'
       }
     }
-    return { style }
+    const isShow = ref(false)
+    onMounted(() => {
+      isShow.value = true
+    })
+    return { style, isShow }
   }
 }
 </script>
 <style scoped lang="less">
+.down {
+  &-enter {
+    &-from {
+      transform: translate3d(0, -75px, 0);
+      opacity: 0;
+    }
+    &-active {
+      transition: all 0.5s;
+    }
+    &-to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+}
 .rabbit-message {
   width: 300px;
   height: 50px;

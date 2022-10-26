@@ -170,10 +170,10 @@ export default {
       target,
       login
     }
-  },
-  created() {
-    this.$message({ type: 'success', text: '测试函数调用方法二' })
   }
+  // created() {
+  //   this.$message({ type: 'success', text: '测试函数调用方法二' })
+  // }
 }
 </script>
 
