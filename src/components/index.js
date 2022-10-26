@@ -9,6 +9,9 @@
 // import RabbitSkeleton from '@/components/rabbit-skeleton.vue'
 // import RabbitCarousel from '@/components/rabbit-carousel.vue'
 // import RabbitMore from '@/components/rabbit-more.vue'
+import { h, render } from 'vue'
+import rabbitMessage from './rabbit-message.vue'
+
 export default {
   install(app) {
     /*
@@ -74,4 +77,12 @@ export default {
       }
     })
   }
+}
+
+export function Message({ type, text }) {
+  const div = document.createElement('div')
+  div.setAttribute('class', 'rabbit-message-container')
+  document.body.appendChild(div)
+  const vnode = h(rabbitMessage, { type, text })
+  render(vnode, div)
 }

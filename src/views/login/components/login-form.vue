@@ -13,7 +13,12 @@
       </a>
     </div>
     <!-- v-slot:为作用域插槽的返回值 -->
-    <Form ref="target" :validation-schema="validateRules" v-slot="{ errors }" autocomplete="off">
+    <Form
+      ref="target"
+      :validation-schema="validateRules"
+      v-slot="{ errors }"
+      autocomplete="off"
+    >
       <div class="form">
         <template v-if="isAccountLogin">
           <div class="form-item">
@@ -114,6 +119,7 @@
 import { ref, reactive } from 'vue'
 import { Form, Field, configure } from 'vee-validate'
 import { mobile, account, isAgree, password, code } from '@/utils/validate'
+import { Message } from '@/components'
 // 校验时机的配置
 configure({
   validateOnInput: true // 修改触发的时机,默认失焦时触发
@@ -150,6 +156,11 @@ export default {
     const login = () => {
       target.value.validate().then((res) => {
         console.log('res', res)
+        if (res) {
+          Message({ type: 'success', text: '校验成功' })
+        } else {
+          Message({ type: 'error', text: '校验失败' })
+        }
       })
     }
     return {
