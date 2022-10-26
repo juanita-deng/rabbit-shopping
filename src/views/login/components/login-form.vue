@@ -159,7 +159,7 @@ export default {
         if (res) {
           Message({ type: 'success', text: '校验成功' })
         } else {
-          Message({ type: 'error', text: '校验失败' })
+          Message({ type: 'error', text: '校验失败', duration: 500 })
         }
       })
     }
@@ -170,6 +170,9 @@ export default {
       target,
       login
     }
+  },
+  created() {
+    this.$message({ type: 'success', text: '测试函数调用方法二' })
   }
 }
 </script>

@@ -76,13 +76,30 @@ export default {
         observer.observe(el)
       }
     })
+    // 4.增加全局方法
+    /** https://www.javascriptc.com/vue3js/guide/migration/global-api.html#vue-prototype-%E6%9B%BF%E6%8D%A2%E4%B8%BA-config-globalproperties
+     * 在vue2中写法:Vue.prototype.$message = Message()
+     */
+    app.config.globalProperties.$message = Message
   }
 }
-
-export function Message({ type, text }) {
-  const div = document.createElement('div')
-  div.setAttribute('class', 'rabbit-message-container')
-  document.body.appendChild(div)
+/**
+ * @param {String} type success error warning
+ * @param {String} text 校验的具体文本提示
+ * @param {Number} duration 延时的具体时间
+ * @example1 Message({type:'success',text:'校验成功',duration:2000})
+ * @example2 this.$message({type:'success',text:'校验成功',duration:2000})
+ */
+const div = document.createElement('div')
+div.setAttribute('class', 'rabbit-message-container')
+document.body.appendChild(div)
+const timer = null
+export function Message({ type, text, duration = 2000 }) {
   const vnode = h(rabbitMessage, { type, text })
   render(vnode, div)
+  clearInterval(timer)
+  setInterval(() => {
+    // 删除虚拟dom
+    render(null, div)
+  }, duration)
 }
