@@ -120,6 +120,9 @@ import { ref, reactive } from 'vue'
 import { Form, Field, configure } from 'vee-validate'
 import { mobile, account, isAgree, password, code } from '@/utils/validate'
 import { Message } from '@/components'
+import { userAccountLogin } from '@/api/user'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 // 校验时机的配置
 configure({
   validateOnInput: true // 修改触发的时机,默认失焦时触发
@@ -153,14 +156,19 @@ export default {
     }
     // 对整个表单进行校验
     const target = ref(null)
+    const store = useStore()
+    const router = useRouter()
     const login = () => {
       target.value.validate().then((res) => {
-        console.log('res', res)
-        if (res) {
-          Message({ type: 'success', text: '校验成功' })
-        } else {
-          Message({ type: 'error', text: '校验失败', duration: 500 })
-        }
+        if (!res) return Message({ type: 'error', text: '校验失败', duration: 3000 })
+        userAccountLogin(form.account, form.password).then(({ result }) => {
+          // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息
+          // 测试账号:zhousg  123456
+          store.commit('user/setUserInfo', result)
+          router.push('/')
+        }).catch(({ response }) => {
+          Message({ type: 'error', text: response.data.message })
+        })
       })
     }
     return {
