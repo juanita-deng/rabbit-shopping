@@ -79,7 +79,9 @@
                 :class="{ error: errors.code }"
                 v-model="form.code"
               />
-              <span class="code" @click="sendCode">{{count === 0 ? '发送验证码':`${count}s后重试`}}</span>
+              <span class="code" @click="sendCode">
+                {{ count === 0 ? '发送验证码' : `${count}s后重试` }}
+              </span>
             </div>
             <div class="error" v-if="errors.code">
               <i class="iconfont icon-warning" />{{ errors.code }}
@@ -123,6 +125,8 @@ import { Message } from '@/components'
 import { userAccountLogin, userMobileLoginMsg } from '@/api/user'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+// import { useIntervalFn } from '@vueuse/core'
+import { useCountDown } from '@/hooks/index'
 // 校验时机的配置
 configure({
   validateOnInput: true // 修改触发的时机,默认失焦时触发
@@ -167,7 +171,9 @@ export default {
     })
     const login = () => {
       target.value.validate().then((res) => {
-        if (!res) return Message({ type: 'error', text: '校验失败', duration: 3000 })
+        if (!res) {
+          return Message({ type: 'error', text: '校验失败', duration: 3000 })
+        }
         userAccountLogin(form.account, form.password)
           .then(({ result }) => {
             // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息
@@ -180,27 +186,52 @@ export default {
           })
       })
     }
-    const count = ref(0)
-    let timer = ref(null)
+    // 方式一:使用自己写的定时器
+    // const count = ref(0)
+    // let timer = ref(null)
+
+    // 方式二:使用useIntervalFn
+    // const { pause, resume } = useIntervalFn(
+    //   () => {
+    //     count.value--
+    //     if (count.value === 0) pause()
+    //   },
+    //   1000,
+    //   { immediate: false }
+    // )
+
+    // 方式三:使用二次封装的hooks
+    const { count, start } = useCountDown()
     const sendCode = () => {
       // 1.对手机号进行校验
       const validateRes = validateRules.mobile(form.mobile)
-      if (validateRes !== true) target.value.setFieldError('mobile', validateRes)
+      if (validateRes !== true) {
+        target.value.setFieldError('mobile', validateRes)
+      }
       // 2.校验通过后发送请求
-      count.value === 0 &&
-      userMobileLoginMsg(form.mobile).then((res) => {
-        console.log('res', res)
-        // 3.倒计时,禁止期间再发请求
-        count.value = 15
-        clearInterval(timer)
-        timer = setInterval(() => {
-          if (count.value === 0) return
-          count.value--
-        },
-        1000)
-      }).catch(({ response }) => {
-        Message({ type: 'error', text: response.data.message })
-      })
+      if (count.value > 0) return // 禁止重复发送请求
+      userMobileLoginMsg(form.mobile)
+        .then((res) => {
+          console.log('res', res)
+          // 3.倒计时,禁止期间再发请求
+          // 方式一:自己写
+          // count.value = 10
+          // clearInterval(timer)
+          // timer = setInterval(() => {
+          //   if (count.value === 0) return
+          //   count.value--
+          // }, 1000)
+
+          // 方式二:使用插件useIntervalFn
+          // count.value = 60
+          // resume()
+
+          // 方式三:使用二次封装的hooks
+          start()
+        })
+        .catch(({ response }) => {
+          Message({ type: 'error', text: response.data.message })
+        })
     }
     return {
       isAccountLogin,

@@ -1,5 +1,5 @@
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { useIntersectionObserver } from '@vueuse/core'
+import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
+import { useIntersectionObserver, useIntervalFn } from '@vueuse/core'
 export const useWindowScroll = () => {
   const y = ref(0)
   const x = ref(0)
@@ -36,4 +36,25 @@ export const useLazyLoad = (apiFn) => {
     { threshold: 0 }
   )
   return { target, list }
+}
+/**
+ * useIntervalFn 官方文档:https://vueuse.org/shared/useintervalfn/
+ * resume:用来重启定时器  pause:用来清除定时器 immediate:是否立即执行定时器,默认为ture
+ */
+export const useCountDown = () => {
+  const count = ref(0)
+  const { pause, resume } = useIntervalFn(
+    () => {
+      count.value--
+      if (count.value <= 0) pause()
+    },
+    1000,
+    { immediate: false }
+  )
+  const start = () => {
+    count.value = 60
+    resume()
+  }
+  onUnmounted(() => pause())
+  return { count, start }
 }
