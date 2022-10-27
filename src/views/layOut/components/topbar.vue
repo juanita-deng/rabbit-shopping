@@ -8,7 +8,7 @@
               <i class="iconfont icon-user"></i>{{ userInfo.account }}
             </a>
           </li>
-          <li><a href="javascript:;">退出登录</a></li>
+          <li><a href="javascript:;" @click="logOut">退出登录</a></li>
         </template>
         <template v-else>
           <li><RouterLink to="/login">请先登录</RouterLink></li>
@@ -28,12 +28,20 @@
 <script>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { Message } from '@/components'
+import { useRouter } from 'vue-router'
 export default {
   name: 'AppTopnav',
   setup() {
     const store = useStore()
+    const router = useRouter()
     const userInfo = computed(() => store.state.user.userInfo)
-    return { userInfo }
+    const logOut = () => {
+      store.commit('user/setUserInfo', {})
+      router.push('/login')
+      Message({ type: 'success', text: '退出成功' })
+    }
+    return { userInfo, logOut }
   }
 }
 </script>
