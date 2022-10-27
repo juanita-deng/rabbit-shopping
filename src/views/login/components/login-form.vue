@@ -122,7 +122,11 @@ import { ref, reactive, watch } from 'vue'
 import { Form, Field, configure } from 'vee-validate'
 import { mobile, account, isAgree, password, code } from '@/utils/validate'
 import { Message } from '@/components'
-import { userAccountLogin, userMobileLoginMsg } from '@/api/user'
+import {
+  userAccountLogin,
+  userMobileLoginMsg,
+  userMobileLogin
+} from '@/api/user'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 // import { useIntervalFn } from '@vueuse/core'
@@ -174,13 +178,15 @@ export default {
         if (!res) {
           return Message({ type: 'error', text: '校验失败', duration: 3000 })
         }
-        userAccountLogin(form.account, form.password)
-          .then(({ result }) => {
-            // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息
-            // 测试账号:zhousg  123456
-            store.commit('user/setUserInfo', result)
-            router.push('/')
-          })
+        const getApi = () => {
+          return isAccountLogin.value ? userAccountLogin(form.account, form.password) : userMobileLogin(form.mobile, form.code)
+        }
+        getApi().then(({ result }) => {
+          // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息
+          // 测试账号:zhousg  123456
+          store.commit('user/setUserInfo', result)
+          router.push('/')
+        })
           .catch(({ response }) => {
             Message({ type: 'error', text: response.data.message })
           })

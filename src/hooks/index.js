@@ -38,10 +38,11 @@ export const useLazyLoad = (apiFn) => {
   return { target, list }
 }
 /**
+ * @param {number}
  * useIntervalFn 官方文档:https://vueuse.org/shared/useintervalfn/
  * resume:用来重启定时器  pause:用来清除定时器 immediate:是否立即执行定时器,默认为ture
  */
-export const useCountDown = () => {
+export const useCountDown = (num = 60) => {
   const count = ref(0)
   const { pause, resume } = useIntervalFn(
     () => {
@@ -52,7 +53,7 @@ export const useCountDown = () => {
     { immediate: false }
   )
   const start = () => {
-    count.value = 60
+    count.value = num
     resume()
   }
   onUnmounted(() => pause())
