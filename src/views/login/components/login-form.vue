@@ -79,7 +79,7 @@
                 :class="{ error: errors.code }"
                 v-model="form.code"
               />
-              <span class="code">发送验证码</span>
+              <span class="code" @click="sendCode">{{count === 0 ? '发送验证码':`${count}s后重试`}}</span>
             </div>
             <div class="error" v-if="errors.code">
               <i class="iconfont icon-warning" />{{ errors.code }}
@@ -116,11 +116,11 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { Form, Field, configure } from 'vee-validate'
 import { mobile, account, isAgree, password, code } from '@/utils/validate'
 import { Message } from '@/components'
-import { userAccountLogin } from '@/api/user'
+import { userAccountLogin, userMobileLoginMsg } from '@/api/user'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 // 校验时机的配置
@@ -158,17 +158,48 @@ export default {
     const target = ref(null)
     const store = useStore()
     const router = useRouter()
+    // 切换时清除历史数据
+    watch(isAccountLogin, (val) => {
+      form.mobile = null
+      form.account = null
+      form.password = null
+      form.code = null
+    })
     const login = () => {
       target.value.validate().then((res) => {
         if (!res) return Message({ type: 'error', text: '校验失败', duration: 3000 })
-        userAccountLogin(form.account, form.password).then(({ result }) => {
-          // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息
-          // 测试账号:zhousg  123456
-          store.commit('user/setUserInfo', result)
-          router.push('/')
-        }).catch(({ response }) => {
-          Message({ type: 'error', text: response.data.message })
-        })
+        userAccountLogin(form.account, form.password)
+          .then(({ result }) => {
+            // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息
+            // 测试账号:zhousg  123456
+            store.commit('user/setUserInfo', result)
+            router.push('/')
+          })
+          .catch(({ response }) => {
+            Message({ type: 'error', text: response.data.message })
+          })
+      })
+    }
+    const count = ref(0)
+    let timer = ref(null)
+    const sendCode = () => {
+      // 1.对手机号进行校验
+      const validateRes = validateRules.mobile(form.mobile)
+      if (validateRes !== true) target.value.setFieldError('mobile', validateRes)
+      // 2.校验通过后发送请求
+      count.value === 0 &&
+      userMobileLoginMsg(form.mobile).then((res) => {
+        console.log('res', res)
+        // 3.倒计时,禁止期间再发请求
+        count.value = 15
+        clearInterval(timer)
+        timer = setInterval(() => {
+          if (count.value === 0) return
+          count.value--
+        },
+        1000)
+      }).catch(({ response }) => {
+        Message({ type: 'error', text: response.data.message })
       })
     }
     return {
@@ -176,7 +207,9 @@ export default {
       validateRules,
       form,
       target,
-      login
+      login,
+      sendCode,
+      count
     }
   }
   // created() {
