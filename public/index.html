@@ -22,4 +22,13 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+  <!-- 
+    QQ互联:官方文档 https://wiki.connect.qq.com/js_sdk%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E#3..E8.87.AA.E5.AE.9A.E4.B9.89.E7.99.BB.E5.BD.95.E6.8C.89.E9.92.AE
+      1.有一个备案的网站,在qq互联上申请appid,并注明登录成功后回调的地址
+        # 测试用appid   100556005
+        # 测试用redirect_uri   http://www.corho.com:8080/#/login/callback  自己写时需要将域名www.corho.com映射到本地hosts 
+      2.引用JS SDK的JavaScript文件
+      3.在html页面需要插入QQ登录按钮的位置
+  -->
+  <script src="http://connect.qq.com/qc_jssdk.js" data-appid="100556005" data-redirecturi="http://www.corho.com:8080/#/login/callback"></script>
 </html>

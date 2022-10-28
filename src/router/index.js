@@ -16,6 +16,7 @@ const routes = [
     ]
   },
   { path: '/login', component: () => import('@/views/login/index') }, // 路由懒加载
+  { path: '/login/callback', component: () => import('@/views/login/callback.vue') },
   { path: '/test', component: () => import('@/views/test/createVNode.vue') }
 ]
 

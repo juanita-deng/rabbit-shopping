@@ -105,10 +105,12 @@
       </div>
     </Form>
     <div class="action">
-      <img
+      <!-- 此处QQ互联,需要根据appid动态生成 -->
+      <!-- <img
         src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
         alt=""
-      />
+      /> -->
+      <span id="qqLoginBtn"></span>
       <div class="url">
         <a href="javascript:;">忘记密码</a>
         <a href="javascript:;">免费注册</a>
@@ -118,7 +120,7 @@
 </template>
 
 <script>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { Form, Field, configure } from 'vee-validate'
 import { mobile, account, isAgree, password, code } from '@/utils/validate'
 import { Message } from '@/components'
@@ -131,6 +133,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 // import { useIntervalFn } from '@vueuse/core'
 import { useCountDown } from '@/hooks/index'
+import QC from 'qc'
 // 校验时机的配置
 configure({
   validateOnInput: true // 修改触发的时机,默认失焦时触发
@@ -239,6 +242,13 @@ export default {
           Message({ type: 'error', text: response.data.message })
         })
     }
+    // 动态生成QQ互联的按钮
+    onMounted(() => {
+      // window.QC.Login({ // 写法一
+      QC.Login({ // 通过vue.config.js配置external
+        btnId: 'qqLoginBtn' // 插入按钮的节点id
+      })
+    })
     return {
       isAccountLogin,
       validateRules,
