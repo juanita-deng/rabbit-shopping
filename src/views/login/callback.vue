@@ -20,7 +20,7 @@
       </a>
     </nav>
     <div class="tab-content" v-if="isShowAccount">
-      <CallbackBind></CallbackBind>
+      <CallbackBind :unionId="unionId"></CallbackBind>
     </div>
     <div class="tab-content" v-else>
       <CallBackPatch></CallBackPatch>
@@ -58,8 +58,11 @@ export default {
      */
     const store = useStore()
     const router = useRouter()
+    const unionId = ref(null)
     if (window.QC.Login.check()) {
       window.QC.Login.getMe((openId) => {
+        unionId.value = openId
+        console.log('openId', openId)
         userQQLogin(openId)
           .then(({ result }) => {
             store.commit('user/setUserInfo', result)
@@ -71,7 +74,7 @@ export default {
           })
       })
     }
-    return { isShowAccount }
+    return { isShowAccount, unionId }
   }
 }
 </script>

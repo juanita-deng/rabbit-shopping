@@ -51,3 +51,35 @@ export const userQQLogin = (unionId, source = 1) => {
     data: { unionId, source }
   })
 }
+/**
+ * 获取QQ绑定的时候短信验证码
+ * @param {String} mobile - 手机号
+ * @returns promise
+ */
+export const userQQBindCode = (mobile) => {
+  return request({
+    method: 'get',
+    url: '/login/social/code',
+    params: {
+      mobile
+    }
+  })
+}
+/**
+ * QQ登录-绑定帐号
+ * @param {String} unionId - QQ唯一标识，openId
+ * @param {String} mobile - 手机号
+ * @param {String} code - 验证码
+ * @returns
+ */
+export const userQQBindLogin = ({ unionId, mobile, code }) => {
+  return request({
+    method: 'post',
+    url: '/login/social/bind',
+    data: {
+      unionId,
+      mobile,
+      code
+    }
+  })
+}
