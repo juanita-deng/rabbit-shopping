@@ -2,11 +2,19 @@
   <LoginHeader></LoginHeader>
   <section class="container">
     <nav class="tab">
-      <a href="javascript:;" @click="isShowAccount=true" :class="{active:isShowAccount}">
+      <a
+        href="javascript:;"
+        @click="isShowAccount = true"
+        :class="{ active: isShowAccount }"
+      >
         <i class="iconfont icon-bind" />
         <span>已有小兔鲜账号，请绑定手机</span>
       </a>
-      <a href="javascript:;" @click="isShowAccount=false" :class="{active:!isShowAccount}">
+      <a
+        href="javascript:;"
+        @click="isShowAccount = false"
+        :class="{ active: !isShowAccount }"
+      >
         <i class="iconfont icon-edit" />
         <span>没有小兔鲜账号，请完善资料</span>
       </a>
@@ -27,6 +35,10 @@ import LoginFooter from './components/login-footer'
 import CallbackBind from './components/callback-bind.vue'
 import CallBackPatch from './components/callback-patch.vue'
 import { ref } from 'vue'
+import { userQQLogin } from '@/api/user'
+import { Message } from '@/components'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 export default {
   name: 'LoginCallback',
   components: {
@@ -37,6 +49,28 @@ export default {
   },
   setup() {
     const isShowAccount = ref(true)
+    /**
+     * 判断QQ账号是否登录
+     *   1.根根回跳组件初始化时提供的sdk获取openid
+     *   2.根据opened去请求我们的数据接口,判断是否绑定过
+     *   3.若成功,说明已绑定和注册,保存返回的登录信息,跳转到首页
+     *   4.若失败,说明没有注册绑定,需要完善登录信息.
+     */
+    const store = useStore()
+    const router = useRouter()
+    if (window.QC.Login.check()) {
+      window.QC.Login.getMe((openId) => {
+        userQQLogin(openId)
+          .then(({ result }) => {
+            store.commit('user/setUserInfo', result)
+            Message({ text: '登录成功' })
+            router.push('/')
+          })
+          .catch(({ response }) => {
+            Message({ type: 'error', text: response.data.message })
+          })
+      })
+    }
     return { isShowAccount }
   }
 }

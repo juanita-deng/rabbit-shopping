@@ -1,8 +1,8 @@
 <template>
   <div class="xtx-form">
     <div class="user-info">
-      <img src="http://qzapp.qlogo.cn/qzapp/101941968/57C7969540F9D3532451374AA127EE5B/50" alt="" />
-      <p>Hi，Tom 欢迎来小兔鲜，完成绑定后可以QQ账号一键登录哦~</p>
+      <img :src="avatar" alt="" />
+      <p>Hi，{{ nickname }} 欢迎来小兔鲜，完成绑定后可以QQ账号一键登录哦~</p>
     </div>
     <div class="xtx-form-item">
       <div class="field">
@@ -24,39 +24,55 @@
 </template>
 
 <script>
+import { reactive, toRefs } from 'vue'
 export default {
-  name: 'CallbackBind'
+  name: 'CallbackBind',
+  setup() {
+    const qqInfo = reactive({
+      avatar: '',
+      nickname: ''
+    })
+    window.QC.api('get_user_info')
+      .success(({ data }) => {
+        qqInfo.avatar = data.figureurl_qq_2
+        qqInfo.nickname = data.nickname
+      })
+      .error((err) => {
+        console.log('err', err)
+      })
+    return { ...toRefs(qqInfo) }
+  }
 }
 </script>
 
-<style scoped lang='less'>
+<style scoped lang="less">
 .user-info {
-    width: 320px;
-    height: 70px;
-    margin: 0 auto;
-    display: flex;
+  width: 320px;
+  height: 70px;
+  margin: 0 auto;
+  display: flex;
+  background: #f2f2f2;
+  align-items: center;
+  padding: 0 10px;
+  margin-bottom: 25px;
+  img {
     background: #f2f2f2;
-    align-items: center;
-    padding: 0 10px;
-    margin-bottom: 25px;
-    img {
-      background: #f2f2f2;
-      width: 50px;
-      height: 50px;
-    }
-    p {
-      padding-left: 10px;
-    }
+    width: 50px;
+    height: 50px;
   }
-  .code {
-    position: absolute;
-    right: 0;
-    top: 0;
-    line-height: 50px;
-    width: 80px;
-    color: #999;
-    &:hover {
-      cursor: pointer;
-    }
+  p {
+    padding-left: 10px;
   }
+}
+.code {
+  position: absolute;
+  right: 0;
+  top: 0;
+  line-height: 50px;
+  width: 80px;
+  color: #999;
+  &:hover {
+    cursor: pointer;
+  }
+}
 </style>
