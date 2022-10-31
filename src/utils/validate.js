@@ -27,3 +27,9 @@ export function isAgree(value) {
   if (!value) return '请勾选同意用户协议'
   return true
 }
+export function rePassword(value, { form }) {
+  if (!value) return '请输入确认密码'
+  if (!/^\w{6,24}$/.test(value)) return '确认密码是6-24个字符'
+  if (form.rePassword !== value) return '请确认两次密码是否一致'
+  return true
+}
