@@ -123,8 +123,7 @@ export default {
       }
       if (count.value > 0) return
       userQQPatchCode(form.mobile)
-        .then(({ result }) => {
-          console.log('result', result)
+        .then(() => {
           start()
         })
         .catch((response) => {
@@ -136,9 +135,8 @@ export default {
         if (!res) {
           return Message({ type: 'error', text: '校验失败', duration: 3000 })
         }
-        userQQPatchLogin({ unionId: props.unionId, ...form })
+        userQQPatchLogin({ unionId: props.unionId, data: form })
           .then(({ result }) => {
-            console.log('userQQPatchLogin', result)
             store.commit('user/setUserInfo', result)
             Message({ text: 'QQ完善信息成功' })
             router.push('/')
