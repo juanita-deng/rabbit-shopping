@@ -6,3 +6,16 @@ export const findAllCategory = () => {
     url: '/home/category/head'
   })
 }
+/**
+ * 获取单个顶级分类信息
+ * @param {String} id - 顶级分类ID
+ */
+export function findTopCategory(id) {
+  return request({
+    method: 'get',
+    url: '/category',
+    params: {
+      id
+    }
+  })
+}
