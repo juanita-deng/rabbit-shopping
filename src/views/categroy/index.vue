@@ -68,6 +68,8 @@ export default {
     watch(
       () => route.params.id,
       (value) => {
+        // 如果切换到二级路由就不应该发送请求
+        if (route.path.includes('/sub')) return
         findTopCategory(value).then(({ result }) => {
           categoryList.value = result.children
         })
