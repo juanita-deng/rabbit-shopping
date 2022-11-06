@@ -8,8 +8,9 @@
       class="home"
       v-for="category in categoryList"
       :key="category.id"
-      @mouseenter="show(category.id)"
+      @mousemove="show(category.id)"
       @mouseleave="hide(category.id)"
+      @click="hide(category.id)"
     >
       <!-- <a href="#">{{ category.name }}</a> -->
       <RouterLink :to="`/category/${category.id}`" @click="hide(category.id)">
