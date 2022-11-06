@@ -36,7 +36,7 @@
   </div>
 </template>
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { getBannerList } from '@/api/home'
@@ -58,9 +58,15 @@ export default {
     getBannerList().then(({ result }) => {
       swiperList.value = result
     })
-    findTopCategory(route.params.id).then(({ result }) => {
-      categoryList.value = result.children
-    })
+    watch(
+      () => route.params.id,
+      (value) => {
+        findTopCategory(value).then(({ result }) => {
+          categoryList.value = result.children
+        })
+      },
+      { immediate: true }
+    )
     return { category, swiperList, categoryList }
   }
 }
