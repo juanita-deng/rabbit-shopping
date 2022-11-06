@@ -2,11 +2,18 @@
 <template>
   <div class="top-category">
     <!-- 面包屑 -->
+    <!-- mode:指定动画的模式,out-in:先出后进 in-out:先进后出,加key是为了处理切换路由时组件不渲染问题 -->
     <RabbitBread separatorClass="icon-angle-right">
       <RabbitBreadItem to="/">首页</RabbitBreadItem>
-      <RabbitBreadItem :to="`/category/${category?.id}`">
-        {{ category?.name }}
-      </RabbitBreadItem>
+      <Transition name="fade-right" mode="out-in">
+        <RabbitBreadItem
+          :to="`/category/${category?.id}`"
+          v-if="category"
+          :key="category.id"
+        >
+          {{ category?.name }}
+        </RabbitBreadItem>
+      </Transition>
     </RabbitBread>
     <!-- 轮播图 -->
     <RabbitCarousel :swiperList="swiperList" style="height: 500px" />
