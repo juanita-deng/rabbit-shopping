@@ -43,6 +43,8 @@ export default {
     // 方式三
     const checked = useVModel(props, 'modelValue', emit)
     const change = () => {
+      // 方式一和方式三
+      checked.value = !checked.value
       // 方式二
       //   emit('update:modelValue', !props.modelValue)
 
@@ -53,9 +55,6 @@ export default {
       //   emit('change', !props.modelValue)
       // 方式三
       emit('change', !checked.value)
-
-      // 方式一和方式三
-      checked.value = !checked.value
     }
     return { checked, change }
   }
