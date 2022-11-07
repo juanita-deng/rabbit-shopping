@@ -4,7 +4,13 @@
     <div class="item">
       <div class="head">品牌：</div>
       <div class="body">
-        <a href="javascript:;" v-for="i in subFilterList?.brands" :key="i.id">
+        <a
+          href="javascript:;"
+          v-for="i in subFilterList?.brands"
+          :key="i.id"
+          :class="{ active: subFilterList?.brands.selected === i.id }"
+          @click="subFilterList.brands.selected = i.id"
+        >
           {{ i.name }}
         </a>
       </div>
@@ -16,6 +22,8 @@
           href="javascript:;"
           v-for="propertie in i.properties"
           :key="propertie.id"
+          :class="{ active: i.properties.selected === propertie.id }"
+          @click="i.properties.selected = propertie.id"
         >
           {{ propertie.name }}
         </a>
@@ -38,6 +46,12 @@ export default {
         // 二级分类切换到顶级分类时不发送请求,否则会报错
         if (!route.path.includes('/sub')) return
         findSubCategoryFilter(value).then(({ result }) => {
+          result.brands.unshift({ id: null, name: '全部' })
+          result.brands.selected = null
+          result.saleProperties.forEach((sub) => {
+            sub.properties.unshift({ id: null, name: '全部' })
+            sub.properties.selected = null
+          })
           subFilterList.value = result
         })
       }
