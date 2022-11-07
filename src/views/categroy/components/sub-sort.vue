@@ -12,8 +12,8 @@
       </a>
     </div>
     <div class="check">
-      <RabbitCheckbox v-model="params.inventory">仅显示有货商品</RabbitCheckbox>
-      <RabbitCheckbox v-model="params.onlyDiscount">仅显示特惠商品</RabbitCheckbox>
+      <RabbitCheckbox v-model="params.inventory" @change="change">仅显示有货商品</RabbitCheckbox>
+      <RabbitCheckbox v-model="params.onlyDiscount" @change="change">仅显示特惠商品</RabbitCheckbox>
     </div>
   </div>
 </template>
@@ -21,7 +21,7 @@
 import { reactive } from 'vue'
 export default {
   name: 'SubSort',
-  setup() {
+  setup(props, { emit }) {
     const params = reactive({
       inventory: false, // 是否有库存
       onlyDiscount: false, // 只显示特惠
@@ -30,14 +30,19 @@ export default {
       sortMethod: null // 排序规则，asc为正序，desc为倒序，默认为desc
     })
     const changeSort = (type) => {
-      params.sortField = type
       if (type === 'price') {
         params.sortMethod = params.sortMethod === 'desc' ? 'asc' : 'desc'
       } else {
+        if (params.sortField === type) return// 如果重复点击就不发送请求
         params.sortMethod = null
       }
+      params.sortField = type
+      emit('changeSort', params)
     }
-    return { params, changeSort }
+    const change = (type) => {
+      emit('changeSort', params)
+    }
+    return { params, changeSort, change }
   }
 }
 </script>

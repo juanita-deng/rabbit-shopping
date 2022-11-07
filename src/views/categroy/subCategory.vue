@@ -6,7 +6,7 @@
     <SubFilter></SubFilter>
     <!-- 排序组件 -->
     <div class="goods-list">
-      <SubSort></SubSort>
+      <SubSort @changeSort="changeSort"></SubSort>
     </div>
     <!-- 商品列表 -->
     <ul>
@@ -43,13 +43,14 @@ export default {
     const finished = ref(false)
     const route = useRoute()
     const goodsList = ref([])
-    const reqParam = {
+    let reqParam = {
       categoryId: route.params.id,
       page: 1,
       pagesize: 10
     }
     const onLoad = () => {
       findSubCategoryGoods(reqParam).then(({ result }) => {
+        console.log(reqParam)
         if (result.pages < reqParam.pagesize * reqParam.page) {
           finished.value = true // 加载完毕
         }
@@ -58,11 +59,18 @@ export default {
         loading.value = false
       })
     }
+    const changeSort = (req) => {
+      reqParam = { ...reqParam, ...req }
+      reqParam.page = 1
+      goodsList.value = []
+      finished.value = false
+    }
     return {
       loading,
       finished,
       onLoad,
-      goodsList
+      goodsList,
+      changeSort
     }
   }
 }
