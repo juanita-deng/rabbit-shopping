@@ -54,6 +54,8 @@ export default {
           })
           subFilterList.value = result
         })
+      }, {
+        immediate: true
       }
     )
     return {
