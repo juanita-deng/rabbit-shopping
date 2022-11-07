@@ -10,8 +10,8 @@
     </div>
     <!-- 商品列表 -->
     <ul>
-      <li v-for="i in 20" :key="i">
-        <GoodsItem :goods="{}" />
+      <li v-for="goods in goodsList" :key="goods">
+        <GoodsItem :goods="goods" />
       </li>
     </ul>
     <!-- 无限加载组件 -->
@@ -28,6 +28,8 @@ import SubFilter from './components/sub-filter.vue'
 import SubSort from './components/sub-sort.vue'
 import GoodsItem from './components/goods-item.vue'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { findSubCategoryGoods } from '@/api/category'
 export default {
   name: 'subCategory',
   components: {
@@ -39,17 +41,28 @@ export default {
   setup() {
     const loading = ref(false)
     const finished = ref(false)
+    const route = useRoute()
+    const goodsList = ref([])
+    const reqParam = {
+      categoryId: route.params.id,
+      page: 1,
+      pagesize: 10
+    }
     const onLoad = () => {
-      setTimeout(() => {
-        console.log('加载更多数据')
-        finished.value = true
+      findSubCategoryGoods(reqParam).then(({ result }) => {
+        if (result.pages < reqParam.pagesize * reqParam.page) {
+          finished.value = true // 加载完毕
+        }
+        goodsList.value = [...goodsList.value, ...result.items]
+        reqParam.page++
         loading.value = false
-      }, 1000)
+      })
     }
     return {
       loading,
       finished,
-      onLoad
+      onLoad,
+      goodsList
     }
   }
 }

@@ -30,3 +30,15 @@ export function findSubCategoryFilter(id) {
     params: { id }
   })
 }
+/**
+ * 获取二级分类下的商品数据
+ * @param {*} data
+ * @returns
+ */
+export function findSubCategoryGoods(data) {
+  return request({
+    method: 'post',
+    url: '/category/goods/temporary',
+    data
+  })
+}
