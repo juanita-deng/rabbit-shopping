@@ -9,7 +9,7 @@
           v-for="i in subFilterList?.brands"
           :key="i.id"
           :class="{ active: subFilterList?.brands.selected === i.id }"
-          @click="subFilterList.brands.selected = i.id"
+          @click="changeBrand(i.id)"
         >
           {{ i.name }}
         </a>
@@ -23,7 +23,7 @@
           v-for="propertie in i.properties"
           :key="propertie.id"
           :class="{ active: i.properties.selected === propertie.id }"
-          @click="i.properties.selected = propertie.id"
+          @click="changeProperties(i,propertie.id)"
         >
           {{ propertie.name }}
         </a>
@@ -37,7 +37,7 @@ import { findSubCategoryFilter } from '@/api/category'
 import { useRoute } from 'vue-router'
 export default {
   name: 'SubFilter',
-  setup() {
+  setup(props, { emit }) {
     const subFilterList = ref(null)
     const route = useRoute()
     watch(
@@ -58,8 +58,46 @@ export default {
         immediate: true
       }
     )
+    /**
+     * 返回给后端的格式:
+     * {
+     *   brandId:null | id
+     *   arttrs:[    // 属性条件数组
+     *     {groupName:'尺寸',propertyName:'73cm'},
+     *     {groupName:'颜色',propertyName:'焕蓝条纹'},
+     *   ]
+     * }
+     */
+    const changeBrand = (id) => {
+      subFilterList.value.brands.selected = id
+      emit('changeFilter', handleParm())
+    }
+    const changeProperties = (item, id) => {
+      item.properties.selected = id
+      emit('changeFilter', handleParm())
+    }
+    const handleParm = () => {
+      const obj = {
+        brandId: '',
+        arttrs: []
+      }
+      const brandsId = subFilterList.value.brands.selected
+      if (brandsId)obj.brandId = brandsId
+      subFilterList.value.saleProperties.forEach((item) => {
+        const propertiesId = item.properties.selected
+        if (propertiesId) {
+          obj.arttrs.push({
+            groupName: item.name,
+            propertyName: item.properties.find((v) => v.id === propertiesId).name
+          })
+        }
+      })
+      return obj
+    }
     return {
-      subFilterList
+      subFilterList,
+      changeBrand,
+      changeProperties
     }
   }
 }

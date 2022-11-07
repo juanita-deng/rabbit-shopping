@@ -3,7 +3,7 @@
     <!-- 面包屑 -->
     <SubBread></SubBread>
     <!-- 筛选区域 -->
-    <SubFilter></SubFilter>
+    <SubFilter @changeFilter="changeFilter"></SubFilter>
     <!-- 排序组件 -->
     <div class="goods-list">
       <SubSort @changeSort="changeSort"></SubSort>
@@ -50,7 +50,6 @@ export default {
     }
     const onLoad = () => {
       findSubCategoryGoods(reqParam).then(({ result }) => {
-        console.log(reqParam)
         if (result.pages < reqParam.pagesize * reqParam.page) {
           finished.value = true // 加载完毕
         }
@@ -60,6 +59,12 @@ export default {
       })
     }
     const changeSort = (req) => {
+      reset(req)
+    }
+    const changeFilter = (req) => {
+      reset(req)
+    }
+    const reset = (req) => {
       reqParam = { ...reqParam, ...req }
       reqParam.page = 1
       goodsList.value = []
@@ -70,7 +75,8 @@ export default {
       finished,
       onLoad,
       goodsList,
-      changeSort
+      changeSort,
+      changeFilter
     }
   }
 }

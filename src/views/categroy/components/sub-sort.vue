@@ -25,7 +25,6 @@ export default {
     const params = reactive({
       inventory: false, // 是否有库存
       onlyDiscount: false, // 只显示特惠
-      arttrs: [], // 属性条件数组
       sortField: null, // 排序字段，取值范围：[publishTime:最新商品,orderNum:最高人气,price:价格排序,evaluateNum:评论最多]
       sortMethod: null // 排序规则，asc为正序，desc为倒序，默认为desc
     })
