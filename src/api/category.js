@@ -19,3 +19,14 @@ export function findTopCategory(id) {
     }
   })
 }
+/**
+ *  获取二级分类筛选条件数据
+ * @param {String} id -  二级分类ID
+ */
+export function findSubCategoryFilter(id) {
+  return request({
+    method: 'get',
+    url: '/category/sub/filter',
+    params: { id }
+  })
+}
