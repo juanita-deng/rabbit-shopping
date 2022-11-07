@@ -1,6 +1,6 @@
 <!-- !!!注意:render动态渲染的组件RabbitBread内不要加注释,否则也会当成元素渲染 -->
 <template>
-  <div class="top-category">
+  <div class="top-category container">
     <!-- 面包屑 -->
     <!-- mode:指定动画的模式,out-in:先出后进 in-out:先进后出,加key是为了处理切换路由时组件不渲染问题 -->
     <RabbitBread separatorClass="icon-angle-right">
