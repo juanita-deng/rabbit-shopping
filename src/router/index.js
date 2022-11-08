@@ -12,6 +12,10 @@ const routes = [
       {
         path: '/category/sub/:id',
         component: () => import('@/views/categroy/subCategory')
+      },
+      {
+        path: '/product/:id',
+        component: () => import('@/views/goods')
       }
     ]
   },
