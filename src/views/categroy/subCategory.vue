@@ -46,11 +46,11 @@ export default {
     let reqParam = {
       categoryId: route.params.id,
       page: 1,
-      pagesize: 10
+      pageSize: 10
     }
     const onLoad = () => {
       findSubCategoryGoods(reqParam).then(({ result }) => {
-        if (result.pages < reqParam.pagesize * reqParam.page) {
+        if (result.items.length < reqParam.pageSize) {
           finished.value = true // 加载完毕
         }
         goodsList.value = [...goodsList.value, ...result.items]
