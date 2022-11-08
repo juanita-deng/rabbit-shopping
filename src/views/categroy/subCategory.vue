@@ -69,6 +69,7 @@ export default {
       reqParam.page = 1
       goodsList.value = []
       finished.value = false
+      onLoad()
     }
     return {
       loading,
