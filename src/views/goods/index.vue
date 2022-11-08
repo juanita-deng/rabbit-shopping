@@ -2,11 +2,17 @@
   <div class="xtx-goods-page">
     <div class="container">
       <!-- 面包屑 -->
-      <RabbitBread>
+      <RabbitBread v-if="goods.categories">
         <RabbitBreadItem to="/">首页</RabbitBreadItem>
-        <RabbitBreadItem to="/">手机</RabbitBreadItem>
-        <RabbitBreadItem to="/">华为</RabbitBreadItem>
-        <RabbitBreadItem to="/">p30</RabbitBreadItem>
+        <RabbitBreadItem :to="`/category/${goods.categories[1].id}`">
+          {{ goods.categories[1].name }}
+        </RabbitBreadItem>
+        <RabbitBreadItem :to="`/category/sub/${goods.categories[0].id}`">
+          {{ goods.categories[0].name }}
+        </RabbitBreadItem>
+        <Transition name="fade-right" mode="out-in">
+          <RabbitBreadItem v-if="goods">{{ goods.name }}</RabbitBreadItem>
+        </Transition>
       </RabbitBread>
       <!-- 商品信息 -->
       <div class="goods-info"></div>
@@ -29,9 +35,32 @@
 
 <script>
 import GoodsRecommend from './components/goods-recommend.vue'
+import { findGoods } from '@/api/product'
+import { useRoute } from 'vue-router'
+import { ref, watch } from 'vue'
 export default {
-  name: 'RabbitGoodsPage',
-  components: { GoodsRecommend }
+  name: 'RabbitGoods',
+  components: { GoodsRecommend },
+  setup() {
+    const goods = useGoods()
+    return { goods }
+  }
+}
+// 获取商品详情数据
+const useGoods = () => {
+  const goods = ref({})
+  const route = useRoute()
+  watch(
+    () => route.params.id,
+    (value) => {
+      if (!route.path.includes('/product')) return
+      findGoods(value).then(({ result }) => {
+        goods.value = result
+      })
+    },
+    { immediate: true }
+  )
+  return goods
 }
 </script>
 
