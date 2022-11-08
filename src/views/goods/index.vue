@@ -2,20 +2,14 @@
   <div class="xtx-goods-page">
     <div class="container">
       <!-- 面包屑 -->
-      <RabbitBread v-if="goods.categories">
-        <RabbitBreadItem to="/">首页</RabbitBreadItem>
-        <RabbitBreadItem :to="`/category/${goods.categories[1].id}`">
-          {{ goods.categories[1].name }}
-        </RabbitBreadItem>
-        <RabbitBreadItem :to="`/category/sub/${goods.categories[0].id}`">
-          {{ goods.categories[0].name }}
-        </RabbitBreadItem>
-        <Transition name="fade-right" mode="out-in">
-          <RabbitBreadItem v-if="goods">{{ goods.name }}</RabbitBreadItem>
-        </Transition>
-      </RabbitBread>
+      <GoodsBread :goods="goods" />
       <!-- 商品信息 -->
-      <div class="goods-info"></div>
+      <div class="goods-info">
+        <div class="media">
+          <GoodsImage :images="goods.mainPictures" v-if="goods.mainPictures" />
+        </div>
+        <div class="spec"></div>
+      </div>
       <!-- 商品推荐 -->
       <GoodsRecommend />
       <!-- 商品详情 -->
@@ -35,12 +29,14 @@
 
 <script>
 import GoodsRecommend from './components/goods-recommend.vue'
+import GoodsBread from './components/goods-bread.vue'
+import GoodsImage from './components/goods-image.vue'
 import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 export default {
   name: 'RabbitGoods',
-  components: { GoodsRecommend },
+  components: { GoodsRecommend, GoodsBread, GoodsImage },
   setup() {
     const goods = useGoods()
     return { goods }
@@ -68,6 +64,15 @@ const useGoods = () => {
 .goods-info {
   min-height: 600px;
   background: #fff;
+  .media {
+    width: 580px;
+    height: 600px;
+    padding: 30px 50px;
+  }
+  .spec {
+    flex: 1;
+    padding: 30px 30px 30px 0;
+  }
 }
 .goods-footer {
   display: flex;
