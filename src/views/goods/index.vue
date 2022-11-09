@@ -7,8 +7,11 @@
       <div class="goods-info">
         <div class="media">
           <GoodsImage :images="goods.mainPictures" v-if="goods.mainPictures" />
+          <GoodsSales />
         </div>
-        <div class="spec"></div>
+        <div class="spec">
+          <GoodsName :goods="goods"/>
+        </div>
       </div>
       <!-- 商品推荐 -->
       <GoodsRecommend />
@@ -28,15 +31,17 @@
 </template>
 
 <script>
-import GoodsRecommend from './components/goods-recommend.vue'
-import GoodsBread from './components/goods-bread.vue'
-import GoodsImage from './components/goods-image.vue'
 import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
+import GoodsRecommend from './components/goods-recommend.vue'
+import GoodsBread from './components/goods-bread.vue'
+import GoodsImage from './components/goods-image.vue'
+import GoodsSales from './components/goods-sales.vue'
+import GoodsName from './components/goods-name.vue'
 export default {
   name: 'RabbitGoods',
-  components: { GoodsRecommend, GoodsBread, GoodsImage },
+  components: { GoodsRecommend, GoodsBread, GoodsImage, GoodsSales, GoodsName },
   setup() {
     const goods = useGoods()
     return { goods }
@@ -64,6 +69,7 @@ const useGoods = () => {
 .goods-info {
   min-height: 600px;
   background: #fff;
+  display: flex;
   .media {
     width: 580px;
     height: 600px;
