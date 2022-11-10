@@ -1,9 +1,9 @@
 <template>
-  <p class="g-name">{{goods.name}}</p>
-  <p class="g-desc">{{goods.desc}}</p>
+  <p class="g-name">{{ goods.name }}</p>
+  <p class="g-desc">{{ goods.desc }}</p>
   <p class="g-price">
-    <span>{{goods.price}}</span>
-    <span>{{goods.oldPrice}}</span>
+    <span>{{ goods.price }}</span>
+    <span>{{ goods.oldPrice }}</span>
   </p>
   <div class="g-service">
     <dl>
@@ -12,8 +12,9 @@
     </dl>
     <dl>
       <dt>配送</dt>
-      <dd>至
-        <RabbitCity/>
+      <dd>
+        至
+        <RabbitCity :fullLocation="fullLocation" @getCityInfo="getCityInfo" />
       </dd>
     </dl>
     <dl>
@@ -29,6 +30,7 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 export default {
   name: 'GoodName',
   props: {
@@ -36,13 +38,21 @@ export default {
       type: Object,
       default: () => {}
     }
+  },
+  setup() {
+    const fullLocation = ref(null)
+    const getCityInfo = (val) => {
+      fullLocation.value =
+        val.provinceName + ' ' + val.cityName + ' ' + val.countyName
+    }
+    return { fullLocation, getCityInfo }
   }
 }
 </script>
 
 <style lang="less" scoped>
 .g-name {
-  font-size: 22px
+  font-size: 22px;
 }
 .g-desc {
   color: #999;
@@ -52,7 +62,7 @@ export default {
   margin-top: 10px;
   span {
     &::before {
-      content: "¥";
+      content: '¥';
       font-size: 14px;
     }
     &:first-child {
@@ -86,7 +96,7 @@ export default {
         span {
           margin-right: 10px;
           &::before {
-            content: "•";
+            content: '•';
             color: @xtxColor;
             margin-right: 2px;
           }

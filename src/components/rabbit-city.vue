@@ -1,8 +1,8 @@
 <template>
   <div class="rabbit-city" ref="target">
     <div :class="['select', { active }]" @click="active = !active">
-      <span class="placeholder">请选择配送地址</span>
-      <span class="value"></span>
+      <span class="placeholder" v-if="!fullLocation">请选择配送地址</span>
+      <span class="value" v-else>{{ fullLocation }}</span>
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="active">
@@ -24,7 +24,13 @@ import axios from 'axios'
 import { ref, reactive, watch } from 'vue'
 export default {
   name: 'RabbitCity',
-  setup() {
+  props: {
+    fullLocation: {
+      type: String,
+      default: ''
+    }
+  },
+  setup(props, { emit }) {
     const active = ref(false)
     const target = ref(null)
     onClickOutside(target, () => {
@@ -56,6 +62,8 @@ export default {
         changeResult.countyName = i.name
         // 关闭弹窗
         active.value = false
+        // 将收集的信息返回给父组件
+        emit('getCityInfo', changeResult)
       }
       // 监听关闭弹窗的处理,关闭后恢复数据(即可解决:每次重新选择为最新的全量数据)
       watch(active, (val) => {
