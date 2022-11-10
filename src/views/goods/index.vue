@@ -10,7 +10,8 @@
           <GoodsSales />
         </div>
         <div class="spec">
-          <GoodsName :goods="goods"/>
+          <GoodsName :goods="goods" />
+          <GoodsSku :goods="goods" />
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -39,9 +40,17 @@ import GoodsBread from './components/goods-bread.vue'
 import GoodsImage from './components/goods-image.vue'
 import GoodsSales from './components/goods-sales.vue'
 import GoodsName from './components/goods-name.vue'
+import GoodsSku from './components/goods-sku.vue'
 export default {
   name: 'RabbitGoods',
-  components: { GoodsRecommend, GoodsBread, GoodsImage, GoodsSales, GoodsName },
+  components: {
+    GoodsRecommend,
+    GoodsBread,
+    GoodsImage,
+    GoodsSales,
+    GoodsName,
+    GoodsSku
+  },
   setup() {
     const goods = useGoods()
     return { goods }
