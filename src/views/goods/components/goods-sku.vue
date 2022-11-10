@@ -9,15 +9,16 @@
             :src="val.picture"
             :title="val.name"
             alt=""
-            :class="{ selected: val.selected }"
+            :class="{ selected: val.selected, disabled: val.disabled }"
             @click="chooseSku(val, spu)"
           />
           <span
             v-else
             @click="chooseSku(val, spu)"
-            :class="{ selected: val.selected }"
-            >{{ val.name }}</span
+            :class="{ selected: val.selected, disabled: val.disabled }"
           >
+            {{ val.name }}
+          </span>
         </template>
       </dd>
     </dl>
@@ -33,6 +34,8 @@ export default {
   setup(props, { emit }) {
     // sku:选择商品的具体某一个规格的其中一个属性  spu:商品的规格
     const chooseSku = (sku, spu) => {
+      // 如果禁用(没有库存),禁止后面草错
+      if (sku.disabled) return
       if (sku.selected) {
         // 若选中则再点击为取消选中(增加一个selected属性)
         sku.selected = false
@@ -41,9 +44,10 @@ export default {
         spu.values.forEach((sku) => (sku.selected = false))
         sku.selected = true
       }
+      updateDisabledStatus(props.goods.specs, pathMap)
     }
     const pathMap = getPathMap(props.goods.skus)
-    console.log(pathMap)
+    updateDisabledStatus(props.goods.specs, pathMap)
     return { chooseSku }
   }
 }
@@ -73,6 +77,43 @@ const getPathMap = (specs) => {
     })
   })
   return pathMap
+}
+/**
+ * 控制按钮禁用状态的函数
+ *    1.遍历所有的规格,判断规格在pathMap中是否存在
+ *    2.若存在,则说明该规格可选
+ *    3.若不存在,则说明该规格要禁用
+ */
+const updateDisabledStatus = (specs, pathMap) => {
+  specs.forEach((v, i) => {
+    // 获取某一规格属性选中的值(sku)
+    const selectedArr = getSelectedValue(specs)
+    v.values.forEach((item) => {
+      // 往选中的规格中添加值
+      selectedArr[i] = item.name
+      const key = selectedArr.filter((v) => v).join('⭐️')
+      item.disabled = !pathMap[key]
+    })
+  })
+}
+/**
+ * 获取选中规格的值
+ *    原则:得到的结果[undefined,undefined,undefined]
+ *        1.遍历所有的规格,判断当前这一规格属性里是否有选中的sku
+ *        2.若选中,则将选中的name存入到selectedArr
+ *        3.若没选中,则存一个undefined
+ */
+const getSelectedValue = (specs) => {
+  const selectedArr = []
+  specs.forEach((v) => {
+    const selected = v.values.find((v) => v.selected)
+    if (selected) {
+      selectedArr.push(selected.name)
+    } else {
+      selectedArr.push(undefined)
+    }
+  })
+  return selectedArr
 }
 </script>
 <style scoped lang="less">
