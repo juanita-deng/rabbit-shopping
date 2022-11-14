@@ -29,7 +29,8 @@ import powerSet from '@/vender/power-set'
 export default {
   name: 'GoodsSku',
   props: {
-    goods: { type: Object, default: () => {} }
+    goods: { type: Object, default: () => {} },
+    skuId: { type: String }
   },
   setup(props, { emit }) {
     // sku:选择商品的具体某一个规格的其中一个属性  spu:商品的规格
@@ -48,6 +49,9 @@ export default {
     }
     const pathMap = getPathMap(props.goods.skus)
     updateDisabledStatus(props.goods.specs, pathMap)
+    // 设置默认选中值
+    initSelectedStatus(props.goods, props.skuId)
+
     return { chooseSku }
   }
 }
@@ -117,6 +121,18 @@ const getSelectedValue = (specs) => {
     selectedArr.push(selected ? selected.name : undefined)
   })
   return selectedArr
+}
+/**
+ * 初始化默认选中状态
+ */
+const initSelectedStatus = (goods, skuId) => {
+  const sku = goods.skus.find((v) => v.id === skuId)
+  if (sku) {
+    goods.specs.forEach((spec, index) => {
+      const name = sku.specs[index].valueName
+      spec.values.find((val) => val.name === name).selected = true
+    })
+  }
 }
 </script>
 <style scoped lang="less">
