@@ -11,7 +11,7 @@
         </div>
         <div class="spec">
           <GoodsName :goods="goods" />
-          <GoodsSku v-if="goods.skus" :goods="goods" skuId="1369155864430120962"/>
+          <GoodsSku v-if="goods.skus" :goods="goods" skuId="1369155864430120962" @changeSku="changeSku"/>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -53,7 +53,12 @@ export default {
   },
   setup() {
     const goods = useGoods()
-    return { goods }
+    const changeSku = (selectedSku) => {
+      goods.value.price = selectedSku.price
+      goods.value.oldPrice = selectedSku.oldPrice
+      goods.value.inventory = selectedSku.inventory
+    }
+    return { goods, changeSku }
   }
 }
 // 获取商品详情数据

@@ -32,6 +32,7 @@ export default {
     goods: { type: Object, default: () => {} },
     skuId: { type: String }
   },
+  emits: ['changeSku'], // 解决vue的警告:给一个根节点,或者定义一个emits
   setup(props, { emit }) {
     // sku:选择商品的具体某一个规格的其中一个属性  spu:商品的规格
     const chooseSku = (sku, spu) => {
@@ -46,11 +47,22 @@ export default {
         sku.selected = true
       }
       updateDisabledStatus(props.goods.specs, pathMap)
+      // 将选中的sku传给父组件
+      const selectedArr = getSelectedValue(props.goods.specs).filter((v) => v)
+      // 如果每个spu都选了sku
+      if (selectedArr.length === props.goods.specs.length) {
+        const key = selectedArr.join('⭐️')
+        const pathMap = getPathMap(props.goods.skus)
+        const skuId = pathMap[key]
+        const selectedSku = props.goods.skus.find((sku) => sku.id === skuId[0])
+        emit('changeSku', selectedSku)
+      }
     }
     const pathMap = getPathMap(props.goods.skus)
-    updateDisabledStatus(props.goods.specs, pathMap)
     // 设置默认选中值
     initSelectedStatus(props.goods, props.skuId)
+    // 更新禁用状态,注意:要在设置默认选中后面,否则禁用状态更新会有问题
+    updateDisabledStatus(props.goods.specs, pathMap)
 
     return { chooseSku }
   }
