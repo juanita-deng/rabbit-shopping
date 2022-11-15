@@ -35,11 +35,11 @@
       <a href="javascript:;" :class="{active:reqParm.sortField === 'praiseCount'}" @click="reqParm.sortField = 'praiseCount'">最热</a>
     </div>
      <!-- 列表 -->
-    <div class="list">
+    <div class="list" v-for="item in commentList" :key="item.id">
       <div class="item">
         <div class="user">
-          <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/avatar_1.png" alt="">
-          <span>兔****m</span>
+          <img :src="item.member.avatar" alt="">
+          <span>{{item.member.nickname}}</span>
         </div>
         <div class="body">
           <div class="score">
@@ -50,10 +50,10 @@
             <i class="iconfont icon-wjx02"></i>
             <span class="attr">颜色：黑色 尺码：M</span>
           </div>
-          <div class="text">网易云app上这款耳机非常不错 新人下载网易云购买这款耳机优惠大 而且耳机🎧确实正品 音质特别好 戴上这款耳机 听音乐看电影效果声音真是太棒了 无线方便 小盒自动充电 最主要是质量好音质棒 想要买耳机的放心拍 音效巴巴滴 老棒了</div>
+          <div class="text">{{item.content}}</div>
           <div class="time">
-            <span>2020-10-10 10:11:22</span>
-            <span class="zan"><i class="iconfont icon-dianzan"></i>100</span>
+            <span>{{item.createTime}}</span>
+            <span class="zan"><i class="iconfont icon-dianzan"></i>{{item.praiseCount}}</span>
           </div>
         </div>
       </div>
@@ -63,13 +63,14 @@
 <script>
 import { watch, ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
-import { findCommentInfoByGoods } from '@/api/product'
+import { findCommentInfoByGoods, findCommentListByGoods } from '@/api/product'
 export default {
   name: 'GoodsComment',
   setup() {
     const route = useRoute()
     const commentInfo = ref({})
     const currentIndex = ref(0)
+    const commentList = ref([])
     // 筛选参数
     const reqParm = reactive({
       page: 1,
@@ -106,7 +107,14 @@ export default {
         reqParm.tag = name
       }
     }
-    return { commentInfo, currentIndex, changeTag, reqParm }
+    watch([() => route.params.id, reqParm], (val) => {
+      findCommentListByGoods(val[0], reqParm).then(({ result }) => {
+        commentList.value = result.items
+      })
+    }, {
+      immediate: true
+    })
+    return { commentInfo, currentIndex, changeTag, reqParm, commentList }
   }
 }
 </script>
