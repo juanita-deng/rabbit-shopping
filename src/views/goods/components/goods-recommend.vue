@@ -5,7 +5,7 @@
       <span class="title">同类商品推荐</span>
     </div>
     <!-- 此处使用改造后的Rabbit-carousel.vue -->
-    <RabbitCarousel :swiperList="swiperList" />
+    <RabbitCarousel :swiperList="swiperList" style="height: 380px" />
   </div>
 </template>
 
