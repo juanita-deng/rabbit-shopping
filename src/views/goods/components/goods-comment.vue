@@ -14,14 +14,12 @@
       <div class="tags">
         <div class="dt">大家都在说：</div>
         <div class="dd">
-          <a href="javascript:;" class="active">
-            全部评价（{{ commentInfo.evaluateCount }}）
-          </a>
-          <a href="javascript:;">有图（{{ commentInfo.hasPictureCount }}）</a>
           <a
             href="javascript:;"
             v-for="(item, index) in commentInfo.tags"
             :key="index"
+            :class="{active:index === currentIndex}"
+            @click="changeTag(index,item.title)"
           >
             {{ item.title }}（{{ item.tagCount }}）
           </a>
@@ -46,16 +44,22 @@ export default {
   setup() {
     const route = useRoute()
     const commentInfo = ref({})
+    const currentIndex = ref(0)
     watch(
       () => route.params.id,
       (val) => {
         findCommentInfoByGoods(val).then(({ result }) => {
+          result.tags.unshift({ title: '有图', tagCount: result.hasPictureCount })
+          result.tags.unshift({ title: '全部评价', tagCount: result.evaluateCount })
           commentInfo.value = result
         })
       },
       { immediate: true }
     )
-    return { commentInfo }
+    const changeTag = (index, name) => {
+      currentIndex.value = index
+    }
+    return { commentInfo, currentIndex, changeTag }
   }
 }
 </script>
