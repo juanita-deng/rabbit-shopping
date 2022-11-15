@@ -68,7 +68,7 @@ export default {
       goods.value.oldPrice = selectedSku.oldPrice
       goods.value.inventory = selectedSku.inventory
     }
-    const num = ref(5)
+    const num = ref(1)
     return { goods, changeSku, num }
   }
 }
