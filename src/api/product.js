@@ -44,3 +44,15 @@ export const findHotGoods = (id, type, limit = 3) => {
     }
   })
 }
+/**
+ * 获取商品的评价统计信息
+ * @param {String} id - 商品ID
+ * https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate  此处是后端写的假数据
+ *
+ */
+export const findCommentInfoByGoods = (id) => {
+  return request({
+    url: `https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`,
+    method: 'get'
+  })
+}

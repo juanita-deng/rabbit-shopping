@@ -30,7 +30,7 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <GoodsTab />
+          <GoodsTab :commentCount="goods.commentCount" />
           <!-- 注意事项 -->
           <GoodsWarn />
         </div>

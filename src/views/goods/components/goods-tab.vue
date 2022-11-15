@@ -14,7 +14,7 @@
         @click="activeName = 'GoodsComment'"
       >
         商品评价
-        <span></span>
+        <span>({{ commentCount }})</span>
       </a>
     </nav>
     <!-- 这个位置显示对应的组件 GoodsDetail 或者 GoodsComment -->
@@ -31,6 +31,9 @@ export default {
   components: {
     GoodsComment,
     GoodsDetail
+  },
+  props: {
+    commentCount: { type: Number }
   },
   setup() {
     const activeName = ref('GoodsDetail')
