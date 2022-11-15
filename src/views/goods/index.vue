@@ -12,6 +12,8 @@
         <div class="spec">
           <GoodsName :goods="goods" />
           <GoodsSku v-if="goods.skus" :goods="goods" skuId="1369155864430120962" @changeSku="changeSku"/>
+          <!-- 数量选择组件 -->
+          <RabbitNumbox v-model="num" :max="goods.inventory"/>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -58,7 +60,8 @@ export default {
       goods.value.oldPrice = selectedSku.oldPrice
       goods.value.inventory = selectedSku.inventory
     }
-    return { goods, changeSku }
+    const num = ref(5)
+    return { goods, changeSku, num }
   }
 }
 // 获取商品详情数据
