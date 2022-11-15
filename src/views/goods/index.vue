@@ -11,9 +11,17 @@
         </div>
         <div class="spec">
           <GoodsName :goods="goods" />
-          <GoodsSku v-if="goods.skus" :goods="goods" skuId="1369155864430120962" @changeSku="changeSku"/>
+          <GoodsSku
+            v-if="goods.skus"
+            :goods="goods"
+            skuId="1369155864430120962"
+            @changeSku="changeSku"
+          />
           <!-- 数量选择组件 -->
-          <RabbitNumbox v-model="num" :max="goods.inventory"/>
+          <RabbitNumbox v-model="num" :max="goods.inventory" />
+          <RabbitButton type="primary" style="margin-top: 20px">
+            加入购物车
+          </RabbitButton>
         </div>
       </div>
       <!-- 商品推荐 -->
