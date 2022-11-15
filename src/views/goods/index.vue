@@ -30,7 +30,7 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <GoodsTab />
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
         </div>
@@ -44,13 +44,14 @@
 <script>
 import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router'
-import { ref, watch } from 'vue'
+import { provide, ref, watch } from 'vue'
 import GoodsRecommend from './components/goods-recommend.vue'
 import GoodsBread from './components/goods-bread.vue'
 import GoodsImage from './components/goods-image.vue'
 import GoodsSales from './components/goods-sales.vue'
 import GoodsName from './components/goods-name.vue'
 import GoodsSku from './components/goods-sku.vue'
+import GoodsTab from './components/goods-tab.vue'
 export default {
   name: 'RabbitGoods',
   components: {
@@ -59,7 +60,8 @@ export default {
     GoodsImage,
     GoodsSales,
     GoodsName,
-    GoodsSku
+    GoodsSku,
+    GoodsTab
   },
   setup() {
     const goods = useGoods()
@@ -86,6 +88,7 @@ const useGoods = () => {
     },
     { immediate: true }
   )
+  provide('goods', goods)
   return goods
 }
 </script>
@@ -116,10 +119,6 @@ const useGoods = () => {
     width: 280px;
     min-height: 1000px;
   }
-}
-.goods-tabs {
-  min-height: 600px;
-  background: #fff;
 }
 .goods-warn {
   min-height: 600px;
