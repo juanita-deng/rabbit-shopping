@@ -1,5 +1,6 @@
 <template>
   <div class="goods-comment">
+    <!-- 评论标签 -->
     <div class="head">
       <div class="data">
         <p>
@@ -26,17 +27,41 @@
         </div>
       </div>
     </div>
+    <!-- 排序筛选 -->
     <div class="sort">
       <span>排序：</span>
-      <a href="javascript:;" class="active">默认</a>
-      <a href="javascript:;">最新</a>
-      <a href="javascript:;">最热</a>
+      <a href="javascript:;" :class="{active:reqParm.sortField === null}" @click="reqParm.sortField = null">默认</a>
+      <a href="javascript:;" :class="{active:reqParm.sortField === 'createTime'}" @click="reqParm.sortField = 'createTime'">最新</a>
+      <a href="javascript:;" :class="{active:reqParm.sortField === 'praiseCount'}" @click="reqParm.sortField = 'praiseCount'">最热</a>
     </div>
-    <div class="list"></div>
+     <!-- 列表 -->
+    <div class="list">
+      <div class="item">
+        <div class="user">
+          <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/avatar_1.png" alt="">
+          <span>兔****m</span>
+        </div>
+        <div class="body">
+          <div class="score">
+            <i class="iconfont icon-wjx01"></i>
+            <i class="iconfont icon-wjx01"></i>
+            <i class="iconfont icon-wjx01"></i>
+            <i class="iconfont icon-wjx01"></i>
+            <i class="iconfont icon-wjx02"></i>
+            <span class="attr">颜色：黑色 尺码：M</span>
+          </div>
+          <div class="text">网易云app上这款耳机非常不错 新人下载网易云购买这款耳机优惠大 而且耳机🎧确实正品 音质特别好 戴上这款耳机 听音乐看电影效果声音真是太棒了 无线方便 小盒自动充电 最主要是质量好音质棒 想要买耳机的放心拍 音效巴巴滴 老棒了</div>
+          <div class="time">
+            <span>2020-10-10 10:11:22</span>
+            <span class="zan"><i class="iconfont icon-dianzan"></i>100</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import { watch, ref } from 'vue'
+import { watch, ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { findCommentInfoByGoods } from '@/api/product'
 export default {
@@ -45,6 +70,15 @@ export default {
     const route = useRoute()
     const commentInfo = ref({})
     const currentIndex = ref(0)
+    // 筛选参数
+    const reqParm = reactive({
+      page: 1,
+      pageSize: 10,
+      hasPicture: false,
+      tag: null,
+      sortField: null, // 'praiseCount'最热  'createTime'最新
+      sortMethod: 'desc'
+    })
     watch(
       () => route.params.id,
       (val) => {
@@ -58,8 +92,21 @@ export default {
     )
     const changeTag = (index, name) => {
       currentIndex.value = index
+      if (index === 0) {
+        // 点击的是全部评价
+        reqParm.hasPicture = false
+        reqParm.tag = null
+      } else if (index === 1) {
+        // 点击的是有图
+        reqParm.hasPicture = true
+        reqParm.tag = null
+      } else {
+        // 点击的是其他tag
+        reqParm.hasPicture = false
+        reqParm.tag = name
+      }
     }
-    return { commentInfo, currentIndex, changeTag }
+    return { commentInfo, currentIndex, changeTag, reqParm }
   }
 }
 </script>
@@ -141,6 +188,51 @@ export default {
       &.active,
       &:hover {
         color: @xtxColor;
+      }
+    }
+  }
+  .list {
+    padding: 0 20px;
+    .item {
+      display: flex;
+      padding: 25px 10px;
+      border-bottom: 1px solid #f5f5f5;
+      .user {
+        width: 160px;
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          overflow: hidden;
+        }
+        span {
+          padding-left: 10px;
+          color: #666;
+        }
+      }
+      .body {
+        flex: 1;
+        .score {
+          line-height: 40px;
+          .iconfont {
+            color: #ff9240;
+            padding-right: 3px;
+          }
+          .attr {
+            padding-left: 10px;
+            color: #666;
+          }
+        }
+      }
+      .text {
+        color: #666;
+        line-height: 24px;
+      }
+      .time {
+        color: #999;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
       }
     }
   }
