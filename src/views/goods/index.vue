@@ -35,7 +35,14 @@
           <GoodsWarn />
         </div>
         <!-- 24热榜+专题推荐 -->
-        <div class="goods-aside"></div>
+        <div class="goods-aside">
+          <GoodsAside
+            v-for="item in asideList"
+            :key="item.id"
+            :title="item.title"
+            :type="item.id"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -53,6 +60,7 @@ import GoodsName from './components/goods-name.vue'
 import GoodsSku from './components/goods-sku.vue'
 import GoodsTab from './components/goods-tab.vue'
 import GoodsWarn from './components/goods-warn.vue'
+import GoodsAside from './components/goods-aside.vue'
 export default {
   name: 'RabbitGoods',
   components: {
@@ -63,7 +71,8 @@ export default {
     GoodsName,
     GoodsSku,
     GoodsTab,
-    GoodsWarn
+    GoodsWarn,
+    GoodsAside
   },
   setup() {
     const goods = useGoods()
@@ -73,7 +82,12 @@ export default {
       goods.value.inventory = selectedSku.inventory
     }
     const num = ref(1)
-    return { goods, changeSku, num }
+    const asideList = ref([
+      { id: 1, title: '24小时热榜' },
+      { id: 2, title: '周热榜' },
+      { id: 3, title: '总热榜' }
+    ])
+    return { goods, changeSku, num, asideList }
   }
 }
 // 获取商品详情数据
