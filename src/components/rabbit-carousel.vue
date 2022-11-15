@@ -6,9 +6,22 @@
         v-for="(item, index) in swiperList"
         :key="item.id"
       >
-        <RouterLink :to="item.hrefUrl">
+        <!-- 首页图片轮播 -->
+        <RouterLink :to="item.hrefUrl" v-if="item.hrefUrl">
           <img :src="item.imgUrl" alt="" />
         </RouterLink>
+        <!-- 商品详情-商品轮播 -->
+        <div v-else class="slider">
+          <RouterLink
+            v-for="goods in item"
+            :key="goods.id"
+            :to="`/product/${goods.id}`"
+          >
+            <img :src="goods.picture" alt="" />
+            <p class="name ellipsis">{{ goods.name }}</p>
+            <p class="price">&yen;{{ goods.price }}</p>
+          </RouterLink>
+        </div>
       </li>
     </ul>
     <a
@@ -166,6 +179,31 @@ export default {
   &:hover {
     .carousel-btn {
       opacity: 1;
+    }
+  }
+  // 轮播商品
+  .slider {
+    display: flex;
+    justify-content: space-around;
+    padding: 0 40px;
+    > a {
+      width: 240px;
+      text-align: center;
+      img {
+        padding: 20px;
+        width: 230px !important;
+        height: 230px !important;
+      }
+      .name {
+        font-size: 16px;
+        color: #666;
+        padding: 0 40px;
+      }
+      .price {
+        font-size: 16px;
+        color: @priceColor;
+        margin-top: 15px;
+      }
     }
   }
 }
