@@ -48,6 +48,8 @@
             <span class="attr">{{formatSpec(item.orderInfo.specs)}}</span>
           </div>
           <div class="text">{{item.content}}</div>
+          <!-- 评论图片 -->
+          <GoodsImagePreview v-if="item.pictures.length" :pictures = "item.pictures"/>
           <div class="time">
             <span>{{item.createTime}}</span>
             <span class="zan"><i class="iconfont icon-dianzan"></i>{{item.praiseCount}}</span>
@@ -61,8 +63,12 @@
 import { watch, ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { findCommentInfoByGoods, findCommentListByGoods } from '@/api/product'
+import GoodsImagePreview from './goods-image-preview.vue'
 export default {
   name: 'GoodsComment',
+  components: {
+    GoodsImagePreview
+  },
   setup() {
     const route = useRoute()
     const commentInfo = ref({})
