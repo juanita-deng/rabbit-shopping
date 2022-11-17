@@ -1,23 +1,48 @@
 <template>
   <div class="xtx-pagination">
-    <a href="javascript:;" :class="{ disabled: pager.start === 1 }">上一页</a>
+    <a
+      href="javascript:;"
+      :class="{ disabled: myCurrrentPage === 1 }"
+      @click="myCurrrentPage = 1"
+    >
+      首页
+    </a>
+    <a
+      href="javascript:;"
+      :class="{ disabled: pager.start === 1 }"
+      @click="changePage(-1)"
+    >
+      上一页
+    </a>
     <span v-if="pager.start !== 1">...</span>
     <a
       href="javascript:;"
-      :class="{ active: currentPage === num }"
+      :class="{ active: myCurrrentPage === num }"
       v-for="num in pager.btnArr"
       :key="num"
+      @click="myCurrrentPage = num"
     >
       {{ num }}
     </a>
     <span v-if="pager.end !== pager.pages">...</span>
-    <a href="javascript:;" :class="{ disabled: pager.end === pager.pages }">
+    <a
+      href="javascript:;"
+      :class="{ disabled: pager.end === pager.pages }"
+      @click="changePage(+1)"
+    >
       下一页
+    </a>
+    <a
+      href="javascript:;"
+      :class="{ disabled: myCurrrentPage === pager.pages }"
+      @click="myCurrrentPage = pager.pages"
+    >
+      尾页
     </a>
   </div>
 </template>
 <script>
-import { computed } from '@vue/reactivity'
+import { computed, watch, ref } from 'vue'
 
 export default {
   name: 'RabbitPagination',
@@ -25,7 +50,7 @@ export default {
     // 当前页
     currentPage: {
       type: Number,
-      default: 8
+      default: 1
     },
     // 每页显示的条数
     pageSize: {
@@ -44,11 +69,21 @@ export default {
     }
   },
   setup(props, { emit }) {
+    // 将父组件传递的currentPage数据私有化
+    const myCurrrentPage = ref(null)
+    watch(
+      () => props.currentPage,
+      (val) => {
+        myCurrrentPage.value = val
+      },
+      { immediate: true }
+    )
+    // 页面渲染需要的参数
     const pager = computed(() => {
       // 总页数
       const pages = Math.ceil(props.total / props.pageSize)
       // 1.理想情况
-      let start = props.currentPage - parseInt(props.pageNum / 2) // 开始的按钮
+      let start = myCurrrentPage.value - parseInt(props.pageNum / 2) // 开始的按钮
       let end = start + props.pageNum - 1 // 最后一个按钮
       // 2.start 为小于1的情况(currentPage:2  total:100  pageNum:5 ----> start = 0)
       if (start < 1) {
@@ -69,8 +104,16 @@ export default {
 
       return { pages, start, end, btnArr }
     })
-
-    return { pager }
+    const changePage = (val) => {
+      if (val === -1 && pager.value.start === 1) return // 首页禁用后不可点击
+      if (val === +1 && pager.value.end === pager.value.pages) return // 尾页禁用后不可点击
+      myCurrrentPage.value = myCurrrentPage.value + val
+    }
+    // 监听当前页的变化并传递给父组件
+    watch(myCurrrentPage, (val) => {
+      emit('changePage', val)
+    })
+    return { pager, changePage, myCurrrentPage }
   }
 }
 </script>

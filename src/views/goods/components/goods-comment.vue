@@ -58,7 +58,7 @@
       </div>
     </div>
     <!-- 分页 -->
-    <RabbitPagination />
+    <RabbitPagination @changePage="changePage" :total="total"/>
   </div>
 </template>
 <script>
@@ -76,6 +76,7 @@ export default {
     const commentInfo = ref({})
     const currentIndex = ref(0)
     const commentList = ref([])
+    const total = ref(0)
     // 筛选参数
     const reqParm = reactive({
       page: 1,
@@ -115,6 +116,7 @@ export default {
     watch([() => route.params.id, reqParm], (val) => {
       findCommentListByGoods(val[0], reqParm).then(({ result }) => {
         commentList.value = result.items
+        total.value = result.counts
       })
     }, {
       immediate: true
@@ -125,7 +127,10 @@ export default {
     const formatSpec = (specs) => {
       return specs.reduce((pre, cur) => `${pre}  ${cur.name}:${cur.nameValue}`, '')
     }
-    return { commentInfo, currentIndex, changeTag, reqParm, commentList, formatNickname, formatSpec }
+    const changePage = (page) => {
+      reqParm.page = page
+    }
+    return { commentInfo, currentIndex, changeTag, reqParm, commentList, formatNickname, formatSpec, changePage, total }
   }
 }
 </script>
