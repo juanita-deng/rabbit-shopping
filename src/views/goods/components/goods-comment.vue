@@ -57,6 +57,8 @@
         </div>
       </div>
     </div>
+    <!-- 分页 -->
+    <RabbitPagination />
   </div>
 </template>
 <script>
