@@ -39,16 +39,13 @@
       <div class="item">
         <div class="user">
           <img :src="item.member.avatar" alt="">
-          <span>{{item.member.nickname}}</span>
+          <span>{{formatNickname(item.member.nickname)}}</span>
         </div>
         <div class="body">
           <div class="score">
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx02"></i>
-            <span class="attr">颜色：黑色 尺码：M</span>
+            <i class="iconfont icon-wjx01" v-for="star in item.score" :key="star + item.id"></i>
+            <i class="iconfont icon-wjx02" v-for="emptyStar in (5 - item.score)" :key="emptyStar + item.id"></i>
+            <span class="attr">{{formatSpec(item.orderInfo.specs)}}</span>
           </div>
           <div class="text">{{item.content}}</div>
           <div class="time">
@@ -114,7 +111,13 @@ export default {
     }, {
       immediate: true
     })
-    return { commentInfo, currentIndex, changeTag, reqParm, commentList }
+    const formatNickname = (nickname) => {
+      return nickname.slice(0, 1) + '*****' + nickname.slice(-1)
+    }
+    const formatSpec = (specs) => {
+      return specs.reduce((pre, cur) => `${pre}  ${cur.name}:${cur.nameValue}`, '')
+    }
+    return { commentInfo, currentIndex, changeTag, reqParm, commentList, formatNickname, formatSpec }
   }
 }
 </script>
