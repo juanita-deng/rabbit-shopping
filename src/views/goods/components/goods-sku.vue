@@ -56,6 +56,9 @@ export default {
         const skuId = pathMap[key]
         const selectedSku = props.goods.skus.find((sku) => sku.id === skuId[0])
         emit('changeSku', selectedSku)
+      } else {
+        // 如果规格没选全,则晴空选中的sku
+        emit('changeSku', {})
       }
     }
     const pathMap = getPathMap(props.goods.skus)
@@ -110,11 +113,11 @@ const getPathMap = (specs) => {
 const updateDisabledStatus = (specs, pathMap) => {
   specs.forEach((spec, index) => {
     // 获取某一规格属性选中的值(sku)
-    const selectedArr = getSelectedValue(specs)// 注意:次行一定要在specs的遍历里边执行
+    const selectedArr = getSelectedValue(specs) // 注意:次行一定要在specs的遍历里边执行
     spec.values.forEach((val) => {
       // 往选中的规格中添加值
       selectedArr[index] = val.name
-      const key = selectedArr.filter((v) => v).join('⭐️')// 过滤掉undefined的项
+      const key = selectedArr.filter((v) => v).join('⭐️') // 过滤掉undefined的项
       val.disabled = !pathMap[key]
     })
   })

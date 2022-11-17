@@ -19,7 +19,7 @@
           />
           <!-- 数量选择组件 -->
           <RabbitNumbox v-model="num" :max="goods.inventory" />
-          <RabbitButton type="primary" style="margin-top: 20px">
+          <RabbitButton type="primary" style="margin-top: 20px" @click="addCar">
             加入购物车
           </RabbitButton>
         </div>
@@ -61,6 +61,7 @@ import GoodsSku from './components/goods-sku.vue'
 import GoodsTab from './components/goods-tab.vue'
 import GoodsWarn from './components/goods-warn.vue'
 import GoodsAside from './components/goods-aside.vue'
+import { Message } from '@/components'
 export default {
   name: 'RabbitGoods',
   components: {
@@ -76,10 +77,12 @@ export default {
   },
   setup() {
     const goods = useGoods()
+    const currentSku = ref({})
     const changeSku = (selectedSku) => {
       goods.value.price = selectedSku.price
       goods.value.oldPrice = selectedSku.oldPrice
       goods.value.inventory = selectedSku.inventory
+      currentSku.value = selectedSku
     }
     const num = ref(1)
     const asideList = ref([
@@ -87,7 +90,14 @@ export default {
       { id: 2, title: '周热榜' },
       { id: 3, title: '总热榜' }
     ])
-    return { goods, changeSku, num, asideList }
+    const addCar = () => {
+      if (currentSku.value.id) {
+        console.log('加入购物车', currentSku)
+      } else {
+        Message({ type: 'warning', text: '请选择全部规格后加入购物车' })
+      }
+    }
+    return { goods, changeSku, num, asideList, addCar }
   }
 }
 // 获取商品详情数据
