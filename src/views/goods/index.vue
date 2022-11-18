@@ -100,7 +100,7 @@ export default {
       const selectedSku = {
         id: goods.value.id,
         name: goods.value.name,
-        picture: goods.value.mainPictures,
+        picture: goods.value.mainPictures[0],
         price: goods.value.price,
         count: num.value,
         skuId: currentSku.value.id,
