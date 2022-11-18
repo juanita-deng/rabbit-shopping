@@ -110,8 +110,12 @@ export default {
         stock: goods.value.inventory,
         isEffective: true
       }
-      store.commit('cart/insertCart', selectedSku)
-      Message({ text: '成功加入购物车' })
+      store.dispatch('cart/insertCart', selectedSku)
+        .then(() => {
+          Message({ text: '成功加入购物车' })
+        }).catch(() => {
+          Message({ text: '加入购物车失败', type: 'error' })
+        })
     }
     return { goods, changeSku, num, asideList, addCar }
   }
