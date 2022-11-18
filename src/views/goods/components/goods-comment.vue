@@ -58,7 +58,7 @@
       </div>
     </div>
     <!-- 分页 -->
-    <RabbitPagination @changePage="changePage" :total="total"/>
+    <RabbitPagination @changePage="changePage" :total="total" v-if="total > 0"/>
   </div>
 </template>
 <script>
