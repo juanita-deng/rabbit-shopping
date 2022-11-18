@@ -62,6 +62,7 @@ import GoodsTab from './components/goods-tab.vue'
 import GoodsWarn from './components/goods-warn.vue'
 import GoodsAside from './components/goods-aside.vue'
 import { Message } from '@/components'
+import { useStore } from 'vuex'
 export default {
   name: 'RabbitGoods',
   components: {
@@ -85,17 +86,32 @@ export default {
       currentSku.value = selectedSku
     }
     const num = ref(1)
+    const store = useStore()
     const asideList = ref([
       { id: 1, title: '24小时热榜' },
       { id: 2, title: '周热榜' },
       { id: 3, title: '总热榜' }
     ])
     const addCar = () => {
-      if (currentSku.value.id) {
-        console.log('加入购物车', currentSku)
-      } else {
+      if (!currentSku.value.id) {
         Message({ type: 'warning', text: '请选择全部规格后加入购物车' })
+        return
       }
+      const selectedSku = {
+        id: goods.value.id,
+        name: goods.value.name,
+        picture: goods.value.mainPictures,
+        price: goods.value.price,
+        count: num.value,
+        skuId: currentSku.value.id,
+        attrsText: currentSku.value.specs.reduce((pre, cur) => `${pre} ${cur.name}:${cur.valueName}`, ''),
+        selected: false,
+        nowPrice: goods.value.price,
+        stock: goods.value.inventory,
+        isEffective: true
+      }
+      store.commit('cart/insertCart', selectedSku)
+      Message({ text: '成功加入购物车' })
     }
     return { goods, changeSku, num, asideList, addCar }
   }
