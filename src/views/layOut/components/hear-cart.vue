@@ -42,6 +42,8 @@ export default {
     const validAmount = computed(() => store.getters['cart/validAmount'])
     const validCartList = computed(() => store.getters['cart/validCartList'])
     const validTotal = computed(() => store.getters['cart/validTotal'])
+    // 更新购物车
+    store.dispatch('cart/updateCart')
     return { validTotal, validAmount, validCartList }
   }
 }

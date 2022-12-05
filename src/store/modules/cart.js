@@ -1,3 +1,4 @@
+import { getNewCartGoods } from '@/api/cart'
 export default {
   namespaced: true,
   state: {
@@ -32,6 +33,15 @@ export default {
       }
       // 把加入的商品放入到购物车列表最上面
       state.list.unshift(payload)
+    },
+    // 更新购物车商品最新信息(以防出现失效商品)
+    updateCart(state, payload) {
+      // 找到需要更新的商品
+      const sku = state.list.find((goods) => goods.skuId === payload.skuId)
+      // 更新接口返回的对应最新属性
+      sku.isEffective = payload.isEffective
+      sku.nowPrice = payload.nowPrice
+      sku.stock = payload.stock
     }
   },
   actions: {
@@ -43,6 +53,29 @@ export default {
         } else {
           context.commit('insertCart', playload)
           resolve()
+        }
+      })
+    },
+    // 更新购物车列表
+    updateCart(context) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.userInfo.token) {
+          // 若已登录发送请求获取购物车信息
+        } else {
+          // 没有登录，需要发送请求进行商品信息更新(需要获取购物车所有商品的ID)
+          const promiseArr = context.state.list.map((item) => {
+            return getNewCartGoods(item.skuId)
+          })
+          Promise.all(promiseArr).then((res) => {
+            res.forEach((item, index) => {
+              // 更新购物车列表
+              context.commit('updateCart', {
+                skuId: context.state.list[index].skuId,
+                ...item.result
+              })
+            })
+            resolve()
+          })
         }
       })
     }
