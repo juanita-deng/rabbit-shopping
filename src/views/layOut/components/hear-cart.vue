@@ -3,7 +3,7 @@
     <a class="curr" href="#">
       <i class="iconfont icon-cart"></i><em>{{ validTotal }} </em>
     </a>
-    <div class="layer">
+    <div class="layer" v-if="(validTotal > 0 && $route.path !== 'cart')">
       <div class="list">
         <div class="item" v-for="i in validCartList" :key="i.skuId">
           <RouterLink :to="`/product/${i.id}`">
@@ -19,7 +19,7 @@
               <p class="count">x{{ i.count }}</p>
             </div>
           </RouterLink>
-          <i class="iconfont icon-close-new"></i>
+          <i class="iconfont icon-close-new" @click="del(i.skuId)"></i>
         </div>
       </div>
       <div class="foot">
@@ -33,6 +33,7 @@
   </div>
 </template>
 <script>
+import { Message } from '@/components'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 export default {
@@ -44,7 +45,15 @@ export default {
     const validTotal = computed(() => store.getters['cart/validTotal'])
     // 更新购物车
     store.dispatch('cart/updateCart')
-    return { validTotal, validAmount, validCartList }
+    // 删除购物车
+    const del = (skuId) => {
+      store.dispatch('cart/deleteCart', skuId).then(() => {
+        Message({ text: '删除成功' })
+      }).catch(() => {
+        Message({ type: 'error', text: '删除失败' })
+      })
+    }
+    return { validTotal, validAmount, validCartList, del }
   }
 }
 </script>

@@ -42,16 +42,21 @@ export default {
       sku.isEffective = payload.isEffective
       sku.nowPrice = payload.nowPrice
       sku.stock = payload.stock
+    },
+    // 删除购物车对应商品
+    deleteCart(state, skuId) {
+      const index = state.list.findIndex((item) => item.skuId === skuId)
+      state.list.splice(index, 1)
     }
   },
   actions: {
     // 判断用户是否登录,如登录则发送请求获取购物车信息,若没登录则提交一个mutations(insertCart)
-    insertCart(context, playload) {
+    insertCart(context, payload) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.userInfo.token) {
           // 已登录发送请求获取购物车信息
         } else {
-          context.commit('insertCart', playload)
+          context.commit('insertCart', payload)
           resolve()
         }
       })
@@ -78,6 +83,17 @@ export default {
           })
         }
       })
+    },
+    // 删除购物车对应商品
+    deleteCart(context, skuId) {
+      return new Promise((resolve, reject) => {
+        // 若已登录发送请求获取购物车信息
+        if (context.rootState.user.userInfo.token) {
+        } else {
+          context.commit('deleteCart', skuId)
+          resolve()
+        }
+      })
     }
   },
   getters: {
@@ -91,10 +107,9 @@ export default {
     },
     // 有效商品总金额
     validAmount(state, getters) {
-      return getters.validCartList.reduce(
-        (pre, cur) => pre + cur.nowPrice * cur.count,
-        0
-      ).toFixed(2)
+      return getters.validCartList
+        .reduce((pre, cur) => pre + cur.nowPrice * cur.count, 0)
+        .toFixed(2)
     }
   }
 }
