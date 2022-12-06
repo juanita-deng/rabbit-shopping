@@ -81,7 +81,7 @@ export default {
     const currentSku = ref({})
     const changeSku = (selectedSku) => {
       // 防止切换规格时价格显示为空
-      if (selectedSku.skuId) {
+      if (selectedSku.id) {
         goods.value.price = selectedSku.price
         goods.value.oldPrice = selectedSku.oldPrice
         goods.value.inventory = selectedSku.inventory
