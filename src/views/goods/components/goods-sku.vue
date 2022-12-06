@@ -36,8 +36,8 @@ export default {
   setup(props, { emit }) {
     // sku:选择商品的具体某一个规格的其中一个属性  spu:商品的规格
     const chooseSku = (sku, spu) => {
-      // 如果禁用(没有库存),禁止后面操作
-      if (sku.disabled) return
+      // 选中效果
+      if (sku.disabled) return // 如果禁用(没有库存),禁止后面操作
       if (sku.selected) {
         // 若选中则再点击为取消选中(增加一个selected属性)
         sku.selected = false
@@ -47,22 +47,21 @@ export default {
         sku.selected = true
       }
       updateDisabledStatus(props.goods.specs, pathMap)
-      // 将选中的sku传给父组件
+      // 子传父,将选中的有值的sku传给父组件
       const selectedArr = getSelectedValue(props.goods.specs).filter((v) => v)
       // 如果每个spu都选了sku
       if (selectedArr.length === props.goods.specs.length) {
         const key = selectedArr.join('⭐️')
-        const pathMap = getPathMap(props.goods.skus)
         const skuId = pathMap[key]
         const selectedSku = props.goods.skus.find((sku) => sku.id === skuId[0])
         emit('changeSku', selectedSku)
       } else {
-        // 如果规格没选全,则晴空选中的sku
+        // 如果规格没选全,则清空选中的sku
         emit('changeSku', {})
       }
     }
     const pathMap = getPathMap(props.goods.skus)
-    // 设置默认选中值
+    // 初始化设置默认选中值
     initSelectedStatus(props.goods, props.skuId)
     // 更新禁用状态,注意:要在设置默认选中后面,否则禁用状态更新会有问题
     updateDisabledStatus(props.goods.specs, pathMap)
@@ -115,6 +114,7 @@ const updateDisabledStatus = (specs, pathMap) => {
     // 获取某一规格属性选中的值(sku)
     const selectedArr = getSelectedValue(specs) // 注意:次行一定要在specs的遍历里边执行
     spec.values.forEach((val) => {
+      if (val.selected) return
       // 往选中的规格中添加值
       selectedArr[index] = val.name
       const key = selectedArr.filter((v) => v).join('⭐️') // 过滤掉undefined的项
@@ -144,6 +144,7 @@ const initSelectedStatus = (goods, skuId) => {
   const sku = goods.skus.find((v) => v.id === skuId)
   if (sku) {
     goods.specs.forEach((spec, index) => {
+      // 获取选中的规格属性
       const name = sku.specs[index].valueName
       spec.values.find((val) => val.name === name).selected = true
     })
