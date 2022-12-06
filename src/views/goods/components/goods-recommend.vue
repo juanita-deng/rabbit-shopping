@@ -2,7 +2,7 @@
   <div class="goods-relevant">
     <div class="header">
       <i class="icon" />
-      <span class="title">同类商品推荐</span>
+      <span class="title">{{$route.params.id ? '同类商品推荐':'猜你喜欢'}}</span>
     </div>
     <!-- 此处使用改造后的Rabbit-carousel.vue -->
     <RabbitCarousel :swiperList="swiperList" style="height: 380px" />

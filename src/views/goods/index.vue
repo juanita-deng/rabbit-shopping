@@ -80,9 +80,13 @@ export default {
     const goods = useGoods()
     const currentSku = ref({})
     const changeSku = (selectedSku) => {
-      goods.value.price = selectedSku.price
-      goods.value.oldPrice = selectedSku.oldPrice
-      goods.value.inventory = selectedSku.inventory
+      // 防止切换规格时价格显示为空
+      if (selectedSku.skuId) {
+        goods.value.price = selectedSku.price
+        goods.value.oldPrice = selectedSku.oldPrice
+        goods.value.inventory = selectedSku.inventory
+      }
+      // 把传递过来的sku保存起来
       currentSku.value = selectedSku
     }
     const num = ref(1)

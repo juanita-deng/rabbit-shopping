@@ -1,6 +1,6 @@
 <template>
   <div class="rabbit-numbox">
-    <div class="label">{{ label }}</div>
+    <div class="label" v-if="label">{{ label }}</div>
     <div class="numbox">
       <a href="javascript:;" @click="change(-1)">-</a>
       <input type="text" readonly :value="num" />
@@ -27,7 +27,7 @@ export default {
       default: 10
     },
     label: {
-      type: String,
+      type: [String, Boolean],
       default: '数量'
     }
   },
