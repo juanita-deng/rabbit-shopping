@@ -1,8 +1,8 @@
 <template>
   <div class="cart">
-    <a class="curr" href="#">
+    <RouterLink class="curr" to="/cart">
       <i class="iconfont icon-cart"></i><em>{{ validTotal }} </em>
-    </a>
+    </RouterLink>
     <div class="layer" v-if="(validTotal > 0 && $route.path !== 'cart')">
       <div class="list">
         <div class="item" v-for="i in validCartList" :key="i.skuId">
@@ -27,7 +27,7 @@
           <p>共 {{ validTotal }} 件商品</p>
           <p>&yen;{{ validAmount }}</p>
         </div>
-        <RabbitButton type="plain">去购物车结算</RabbitButton>
+        <RabbitButton type="plain" @click="$router.push('/cart')">去购物车结算</RabbitButton>
       </div>
     </div>
   </div>
