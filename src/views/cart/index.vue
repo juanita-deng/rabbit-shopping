@@ -18,26 +18,41 @@
             </tr>
           </thead>
           <!-- 有效商品 -->
-          <tbody>
-            <tr v-for="i in 3" :key="i">
+          <tbody v-if="$store.getters['cart/validCartList'].length > 0">
+            <tr
+              v-for="item in $store.getters['cart/validCartList']"
+              :key="item.skuId"
+            >
               <td><RabbitCheckbox /></td>
               <td>
                 <div class="goods">
-                  <RouterLink to="/"><img src="https://yanxuan-item.nosdn.127.net/13ab302f8f2c954d873f03be36f8fb03.png" alt=""></RouterLink>
+                  <RouterLink :to="`/product/${item.id}`">
+                    <img :src="item.picture" alt="" />
+                  </RouterLink>
                   <div>
-                    <p class="name ellipsis">和手足干裂说拜拜 ingrams手足皲裂修复霜</p>
+                    <p class="name ellipsis">{{ item.name }}</p>
                     <!-- 选择规格组件 -->
+                    <p class="attr">{{ item.attrsText }}</p>
                   </div>
                 </div>
               </td>
               <td class="tc">
-                <p>&yen;200.00</p>
-                <p>比加入时降价 <span class="red">&yen;20.00</span></p>
+                <p>&yen;{{ (+item.nowPrice).toFixed(2) }}</p>
+                <p v-if="item.price - item.nowPrice > 0">
+                  比加入时降价
+                  <span class="red">
+                    &yen;{{ (item.price - item.nowPrice).toFixed(2) }}
+                  </span>
+                </p>
               </td>
               <td class="tc">
-                <RabbitNumbox label=""/>
+                <RabbitNumbox label="" :modelValue="item.count" />
               </td>
-              <td class="tc"><p class="f16 red">&yen;200.00</p></td>
+              <td class="tc">
+                <p class="f16 red">
+                  &yen;{{ (item.nowPrice * item.count).toFixed(2) }}
+                </p>
+              </td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
                 <p><a class="green" href="javascript:;">删除</a></p>
@@ -47,21 +62,32 @@
           </tbody>
           <!-- 无效商品 -->
           <tbody>
-            <tr><td colspan="6"><h3 class="tit">失效商品</h3></td></tr>
-            <tr v-for="i in 3" :key="i">
-              <td><RabbitCheckbox style="color:#eee;" /></td>
+            <tr>
+              <td colspan="6"><h3 class="tit">失效商品</h3></td>
+            </tr>
+            <tr
+              v-for="item in $store.getters['cart/invalidCartList']"
+              :key="item.skuId"
+            >
+              <td><RabbitCheckbox style="color: #eee" /></td>
               <td>
                 <div class="goods">
-                  <RouterLink to="/"><img src="https://yanxuan-item.nosdn.127.net/13ab302f8f2c954d873f03be36f8fb03.png" alt=""></RouterLink>
+                  <RouterLink :to="`/product/${item.id}`">
+                    <img :src="item.picture" alt="" />
+                  </RouterLink>
                   <div>
-                    <p class="name ellipsis">和手足干裂说拜拜 ingrams手足皲裂修复霜</p>
-                    <p class="attr">颜色：粉色 尺寸：14cm 产地：中国</p>
+                    <p class="name ellipsis">{{ item.name }}</p>
+                    <p class="attr">{{ item.attrsText }}</p>
                   </div>
                 </div>
               </td>
-              <td class="tc"><p>&yen;200.00</p></td>
-              <td class="tc">1</td>
-              <td class="tc"><p>&yen;200.00</p></td>
+              <td class="tc">
+                <p>&yen;{{ item.nowPrice }}</p>
+              </td>
+              <td class="tc">{{ item.count }}</td>
+              <td class="tc">
+                <p>&yen;{{ (item.nowPrice * item.count).toFixed(2) }}</p>
+              </td>
               <td class="tc">
                 <p><a class="green" href="javascript:;">删除</a></p>
                 <p><a href="javascript:;">找相似</a></p>
@@ -108,7 +134,7 @@ export default {
   color: @priceColor;
 }
 .green {
-  color: @xtxColor
+  color: @xtxColor;
 }
 .f16 {
   font-size: 16px;
@@ -167,7 +193,8 @@ export default {
       border-spacing: 0;
       border-collapse: collapse;
       line-height: 24px;
-      th,td{
+      th,
+      td {
         padding: 10px;
         border-bottom: 1px solid #f5f5f5;
         &:first-child {

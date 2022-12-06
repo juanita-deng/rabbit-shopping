@@ -110,6 +110,10 @@ export default {
       return getters.validCartList
         .reduce((pre, cur) => pre + cur.nowPrice * cur.count, 0)
         .toFixed(2)
+    },
+    // 无效商品列表
+    invalidCartList(state) {
+      return state.list.filter((item) => !(item.stock > 0 && item.isEffective))
     }
   }
 }
