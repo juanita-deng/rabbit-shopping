@@ -39,9 +39,19 @@ export default {
       // 找到需要更新的商品
       const sku = state.list.find((goods) => goods.skuId === payload.skuId)
       // 更新接口返回的对应最新属性
-      sku.isEffective = payload.isEffective
-      sku.nowPrice = payload.nowPrice
-      sku.stock = payload.stock
+      // 优化成:根据传入的属性有值则更新
+      for (const k in payload) {
+        if (
+          payload[k] !== null &&
+          payload[k] !== undefined &&
+          payload[k] !== ''
+        ) {
+          sku[k] = payload[k]
+        }
+      }
+      // sku.isEffective = payload.isEffective
+      // sku.nowPrice = payload.nowPrice
+      // sku.stock = payload.stock
     },
     // 删除购物车对应商品
     deleteCart(state, skuId) {
@@ -94,6 +104,33 @@ export default {
           resolve()
         }
       })
+    },
+    // 更新购物车中单选操作
+    updateChecked(context, payload) {
+      return new Promise((resolve, reject) => {
+        // 若已登录发送请求获取购物车信息
+        if (context.rootState.user.userInfo.token) {
+          // TODO
+        } else {
+          context.commit('updateCart', payload)
+          resolve()
+        }
+      })
+    },
+    // 有效商品的全选&反选
+    updateChangeAll(context, selected) {
+      return new Promise((resolve, reject) => {
+        // 若已登录发送请求获取购物车信息
+        if (context.rootState.user.userInfo.token) {
+          // TODO
+        } else {
+          // 获取有效的商品列表,便利调用修改mutation
+          context.getters.validCartList.forEach((goods) => {
+            context.commit('updateCart', { skuId: goods.skuId, selected })
+          })
+          resolve()
+        }
+      })
     }
   },
   getters: {
@@ -114,6 +151,27 @@ export default {
     // 无效商品列表
     invalidCartList(state) {
       return state.list.filter((item) => !(item.stock > 0 && item.isEffective))
+    },
+    // 选中的商品列表
+    selectedCartList(state) {
+      return state.list.filter((item) => item.selected)
+    },
+    // 选中的商品总件数
+    selectedTotal(state, getters) {
+      return getters.selectedCartList.reduce((pre, cur) => pre + cur.count, 0)
+    },
+    // 选中的商品总金额
+    selectedAmount(state, getters) {
+      return getters.selectedCartList
+        .reduce((pre, cur) => pre + cur.nowPrice * cur.count, 0)
+        .toFixed(2)
+    },
+    // 是否全选
+    isCheckedAll(state, getters) {
+      return (
+        getters.validCartList.length === getters.selectedCartList.length &&
+        getters.selectedCartList.length !== 0
+      )
     }
   }
 }

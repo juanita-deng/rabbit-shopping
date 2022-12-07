@@ -9,7 +9,14 @@
         <table>
           <thead>
             <tr>
-              <th width="120"><RabbitCheckbox>全选</RabbitCheckbox></th>
+              <th width="120">
+                <RabbitCheckbox
+                  :modelValue="$store.getters['cart/isCheckedAll']"
+                  @change="changeAll"
+                >
+                  全选
+                </RabbitCheckbox>
+              </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
               <th width="180">数量</th>
@@ -23,7 +30,12 @@
               v-for="item in $store.getters['cart/validCartList']"
               :key="item.skuId"
             >
-              <td><RabbitCheckbox /></td>
+              <td>
+                <RabbitCheckbox
+                  :modelValue="item.selected"
+                  @change="changeChecked(item.skuId, $event)"
+                />
+              </td>
               <td>
                 <div class="goods">
                   <RouterLink :to="`/product/${item.id}`">
@@ -105,8 +117,9 @@
           <a href="javascript:;">清空失效商品</a>
         </div>
         <div class="total">
-          共 7 件商品，已选择 2 件，商品合计：
-          <span class="red">¥400</span>
+          共 {{ $store.getters['cart/validTotal'] }} 件商品， 已选择
+          {{ $store.getters['cart/selectedTotal'] }}件， 商品合计：
+          <span class="red">¥{{ $store.getters['cart/selectedAmount'] }}</span>
           <RabbitButton type="primary">下单结算</RabbitButton>
         </div>
       </div>
@@ -117,9 +130,20 @@
 </template>
 <script>
 import GoodsRecommend from '@/views/goods/components/goods-recommend.vue'
+import { useStore } from 'vuex'
 export default {
   name: 'RabbitCartPage',
-  components: { GoodsRecommend }
+  components: { GoodsRecommend },
+  setup() {
+    const store = useStore()
+    const changeChecked = (skuId, val) => {
+      store.dispatch('cart/updateChecked', { skuId, selected: val })
+    }
+    const changeAll = (selected) => {
+      store.dispatch('cart/updateChangeAll', selected)
+    }
+    return { changeChecked, changeAll }
+  }
 }
 </script>
 <style scoped lang="less">
