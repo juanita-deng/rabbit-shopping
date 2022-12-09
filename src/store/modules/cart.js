@@ -131,6 +131,22 @@ export default {
           resolve()
         }
       })
+    },
+    // 批量删除操作或者清除失效商品(isClear)
+    batchDeleteCart(context, isClear) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.userInfo.token) {
+          // TODO
+        } else {
+          // 便利有效商品或者失效商品列表,批量提交mutation进行删除
+          context.getters[
+            isClear ? 'invalidCartList' : 'validCartList'
+          ].forEach((cartGoods) => {
+            cartGoods.selected && context.commit('deleteCart', cartGoods.skuId)
+          })
+          resolve()
+        }
+      })
     }
   },
   getters: {
@@ -168,7 +184,7 @@ export default {
     },
     // 是否全选
     isCheckedAll(state, getters) {
-      return (
+      return !!(
         getters.validCartList.length === getters.selectedCartList.length &&
         getters.selectedCartList.length !== 0
       )

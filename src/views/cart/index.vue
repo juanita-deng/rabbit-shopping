@@ -88,7 +88,7 @@
             </tr>
           </tbody>
           <!-- 无效商品 -->
-          <tbody>
+          <tbody v-if="$store.getters['cart/invalidCartList'].length > 0">
             <tr>
               <td colspan="6"><h3 class="tit">失效商品</h3></td>
             </tr>
@@ -134,10 +134,15 @@
       <!-- 操作栏 -->
       <div class="action">
         <div class="batch">
-          <RabbitCheckbox>全选</RabbitCheckbox>
-          <a href="javascript:;">删除商品</a>
+          <RabbitCheckbox
+            :modelValue="$store.getters['cart/isCheckedAll']"
+            @change="changeAll"
+          >
+            全选
+          </RabbitCheckbox>
+          <a href="javascript:;" @click="batchDeleteCart()">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
-          <a href="javascript:;">清空失效商品</a>
+          <a href="javascript:;" @click="batchDeleteCart(true)">清空失效商品</a>
         </div>
         <div class="total">
           共 {{ $store.getters['cart/validTotal'] }} 件商品， 已选择
@@ -173,10 +178,19 @@ export default {
           store.dispatch('cart/deleteCart', skuId)
         })
         .catch(() => {
-          console.log('取消')
+          // console.log('取消')
         })
     }
-    return { changeChecked, changeAll, deleteCart }
+    const batchDeleteCart = (isClear) => {
+      Confirm({ text: `您确定要${isClear ? '清空失效' : '删除选中'}的商品嘛` })
+        .then(() => {
+          store.dispatch('cart/batchDeleteCart', isClear)
+        })
+        .catch(() => {
+          // console.log('取消')
+        })
+    }
+    return { changeChecked, changeAll, deleteCart, batchDeleteCart }
   }
 }
 </script>
