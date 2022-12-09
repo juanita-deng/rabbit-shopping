@@ -67,8 +67,23 @@
               </td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p>
+                  <a
+                    class="green"
+                    href="javascript:;"
+                    @click="deleteCart(item.skuId)"
+                  >
+                    删除
+                  </a>
+                </p>
                 <p><a href="javascript:;">找相似</a></p>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr>
+              <td colspan="6">
+                <CartNone />
               </td>
             </tr>
           </tbody>
@@ -101,7 +116,15 @@
                 <p>&yen;{{ (item.nowPrice * item.count).toFixed(2) }}</p>
               </td>
               <td class="tc">
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p>
+                  <a
+                    class="green"
+                    href="javascript:;"
+                    @click="deleteCart(item.skuId)"
+                  >
+                    删除
+                  </a>
+                </p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
@@ -130,10 +153,11 @@
 </template>
 <script>
 import GoodsRecommend from '@/views/goods/components/goods-recommend.vue'
+import CartNone from './components/cart-none.vue'
 import { useStore } from 'vuex'
 export default {
   name: 'RabbitCartPage',
-  components: { GoodsRecommend },
+  components: { GoodsRecommend, CartNone },
   setup() {
     const store = useStore()
     const changeChecked = (skuId, val) => {
@@ -142,7 +166,10 @@ export default {
     const changeAll = (selected) => {
       store.dispatch('cart/updateChangeAll', selected)
     }
-    return { changeChecked, changeAll }
+    const deleteCart = (skuId) => {
+      store.dispatch('cart/deleteCart', skuId)
+    }
+    return { changeChecked, changeAll, deleteCart }
   }
 }
 </script>
