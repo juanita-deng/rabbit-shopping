@@ -1,6 +1,6 @@
 <template>
-  <div class="rabbit-confirm" v-if="show">
-    <div class="wrapper">
+  <div class="rabbit-confirm" :class="{ fade: show }">
+    <div class="wrapper" :class="{ fade: show }">
       <div class="header">
         <h3>{{ title }}</h3>
         <a
@@ -26,9 +26,10 @@
 </template>
 <script>
 import { onMounted, ref } from 'vue'
-
+import RabbitButton from './rabbit-button.vue'
 export default {
   name: 'RabbitConfirm',
+  components: { RabbitButton },
   props: {
     title: {
       type: String,
@@ -48,7 +49,9 @@ export default {
   setup() {
     const show = ref(false)
     onMounted(() => {
-      show.value = true
+      setTimeout(() => {
+        show.value = true
+      }, 0)
     })
     // 改为调用时触发
     // const confirm = () => {
@@ -71,7 +74,11 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 8888;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0);
+  &.fade {
+    transition: all 0.5s;
+    background: rgba(0, 0, 0, 0.5);
+  }
   .wrapper {
     width: 400px;
     background: #fff;
@@ -79,7 +86,13 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -80%);
+    opacity: 0;
+    &.fade {
+      transition: all 0.5s;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
     .header,
     .footer {
       height: 50px;
