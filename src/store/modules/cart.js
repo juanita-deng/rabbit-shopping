@@ -143,6 +143,7 @@ export default {
             isClear ? 'invalidCartList' : 'validCartList'
           ].forEach((cartGoods) => {
             cartGoods.selected && context.commit('deleteCart', cartGoods.skuId)
+            isClear && context.commit('deleteCart', cartGoods.skuId)
           })
           resolve()
         }
