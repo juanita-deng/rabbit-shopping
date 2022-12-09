@@ -11,6 +11,7 @@
 // import RabbitMore from '@/components/rabbit-more.vue'
 import { h, render } from 'vue'
 import rabbitMessage from './rabbit-message.vue'
+import rabbitConfirm from './rabbit-confirm.vue'
 
 export default {
   install(app) {
@@ -102,4 +103,38 @@ export function Message({ type, text, duration = 2000 }) {
     // 删除虚拟dom
     render(null, div)
   }, duration)
+}
+/**
+ * @param {*} title 提示的标题
+ * @param {*} text 提示的文本信息(必传项)
+ * @returns promise
+ * @example Confirm({title:'',text:''}).then(() => {}).catch(() => {})
+ * @example this.$confirm({title:'',text:''}).then(() => {}).catch(() => {})
+ */
+const confirm = document.createElement('div')
+confirm.setAttribute('class', 'rabbit-confirm-container')
+document.body.appendChild(confirm)
+export function Confirm({ title, text }) {
+  return new Promise((resolve, reject) => {
+    // 2.点击确认按钮,触发resolve并销毁组件
+    const confirmCallback = () => {
+      // 销毁虚拟dom
+      render(null, confirm)
+      resolve()
+    }
+    // 3.点击确认按钮,触发reject并销毁组件
+    const cancelCallback = () => {
+      render(null, confirm)
+      reject(new Error('点击取消'))
+    }
+    // 1.创建虚拟节点
+    // 将渲染成 <RabbitConfirm :title='title' :text='text' :confirmCallback='confirmCallback' :cancelCallback='cancelCallback></RabbitConfirm>
+    const vnode = h(rabbitConfirm, {
+      title,
+      text,
+      confirmCallback,
+      cancelCallback
+    })
+    render(vnode, confirm)
+  })
 }

@@ -5,6 +5,8 @@
   <!-- <input type="text" v-focus style="margin: 10px" /> -->
   <!-- 测试全局组件message -->
   <!-- <RabbitMessage type="error" text="校验失败"></RabbitMessage> -->
+  <!-- 测试全局组件confirm -->
+  <!-- <RabbitConfirm /> -->
   <router-view />
 </template>
 

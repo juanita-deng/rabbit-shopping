@@ -154,6 +154,7 @@
 <script>
 import GoodsRecommend from '@/views/goods/components/goods-recommend.vue'
 import CartNone from './components/cart-none.vue'
+import { Confirm } from '@/components'
 import { useStore } from 'vuex'
 export default {
   name: 'RabbitCartPage',
@@ -167,7 +168,13 @@ export default {
       store.dispatch('cart/updateChangeAll', selected)
     }
     const deleteCart = (skuId) => {
-      store.dispatch('cart/deleteCart', skuId)
+      Confirm({ text: '您确认从购物车删除该商品吗？' })
+        .then(() => {
+          store.dispatch('cart/deleteCart', skuId)
+        })
+        .catch(() => {
+          console.log('取消')
+        })
     }
     return { changeChecked, changeAll, deleteCart }
   }
