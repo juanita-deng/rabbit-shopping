@@ -58,7 +58,7 @@
                 </p>
               </td>
               <td class="tc">
-                <RabbitNumbox label="" :modelValue="item.count" />
+                <RabbitNumbox label="" :modelValue="item.count" @change="changeCount(item.skuId,$event)"/>
               </td>
               <td class="tc">
                 <p class="f16 red">
@@ -167,7 +167,10 @@ export default {
   setup() {
     const store = useStore()
     const changeChecked = (skuId, val) => {
-      store.dispatch('cart/updateChecked', { skuId, selected: val })
+      store.dispatch('cart/updateChange', { skuId, selected: val })
+    }
+    const changeCount = (skuId, count) => {
+      store.dispatch('cart/updateChange', { skuId, count: count })
     }
     const changeAll = (selected) => {
       store.dispatch('cart/updateChangeAll', selected)
@@ -190,7 +193,7 @@ export default {
           // console.log('取消')
         })
     }
-    return { changeChecked, changeAll, deleteCart, batchDeleteCart }
+    return { changeChecked, changeAll, deleteCart, batchDeleteCart, changeCount }
   }
 }
 </script>

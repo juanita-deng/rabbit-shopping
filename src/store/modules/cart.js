@@ -106,7 +106,7 @@ export default {
       })
     },
     // 更新购物车中单选操作
-    updateChecked(context, payload) {
+    updateChange(context, payload) {
       return new Promise((resolve, reject) => {
         // 若已登录发送请求获取购物车信息
         if (context.rootState.user.userInfo.token) {

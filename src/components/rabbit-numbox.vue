@@ -39,7 +39,7 @@ export default {
       if (newValue > props.max) return
       num.value = newValue
       // 暴露一个change事件
-      emit('change', num.value)
+      emit('change', newValue)// 因为num是响应式的,所以要传newValue
     }
     return { num, change }
   }
