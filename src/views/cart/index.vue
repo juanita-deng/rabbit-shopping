@@ -44,7 +44,8 @@
                   <div>
                     <p class="name ellipsis">{{ item.name }}</p>
                     <!-- 选择规格组件 -->
-                    <p class="attr">{{ item.attrsText }}</p>
+                    <!-- <p class="attr">{{ item.attrsText }}</p> -->
+                    <CartSku :skuId="item.skuId" :attrsText="item.attrsText"/>
                   </div>
                 </div>
               </td>
@@ -159,11 +160,12 @@
 <script>
 import GoodsRecommend from '@/views/goods/components/goods-recommend.vue'
 import CartNone from './components/cart-none.vue'
+import CartSku from './components/cart-sku.vue'
 import { Confirm } from '@/components'
 import { useStore } from 'vuex'
 export default {
   name: 'RabbitCartPage',
-  components: { GoodsRecommend, CartNone },
+  components: { GoodsRecommend, CartNone, CartSku },
   setup() {
     const store = useStore()
     const changeChecked = (skuId, val) => {

@@ -189,6 +189,7 @@ const initSelectedStatus = (goods, skuId) => {
         height: 30px;
         line-height: 28px;
         padding: 0 20px;
+        margin-bottom: 5px;
         .sku-state-mixin ();
       }
     }
