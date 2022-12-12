@@ -144,9 +144,12 @@ const initSelectedStatus = (goods, skuId) => {
   const sku = goods.skus.find((v) => v.id === skuId)
   if (sku) {
     goods.specs.forEach((spec, index) => {
-      // 获取选中的规格属性
+      // 父组件传递了skuId,需要获取选中的规格属性
       const name = sku.specs[index].valueName
-      spec.values.find((val) => val.name === name).selected = true
+      spec.values.forEach((val) => {
+        val.selected = val.name === name
+      })
+      // 改成上面的:spec.values.find((val) => val.name === name).selected = true
     })
   }
 }
