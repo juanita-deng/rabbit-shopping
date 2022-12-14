@@ -1,4 +1,4 @@
-import { getNewCartGoods } from '@/api/cart'
+import { getNewCartGoods, mergeLocalCart } from '@/api/cart'
 export default {
   namespaced: true,
   state: {
@@ -57,6 +57,10 @@ export default {
     deleteCart(state, skuId) {
       const index = state.list.findIndex((item) => item.skuId === skuId)
       state.list.splice(index, 1)
+    },
+    // 清空本地购物车
+    setCartList(state, list) {
+      state.list = list
     }
   },
   actions: {
@@ -175,6 +179,21 @@ export default {
           // 5.成功
           resolve()
         }
+      })
+    },
+    // 登录成功后合并本地购物车
+    mergeLocalCart(context) {
+      const mergeList = context.getters.validCartList.map((item) => {
+        return {
+          skuId: item.skuId,
+          selected: item.selected,
+          count: item.count
+        }
+      })
+      // 1.请求接口合并本地购物车
+      mergeLocalCart(mergeList).then(() => {
+        // 2.清空本地购物车
+        context.commit('setCartList', [])
       })
     }
   },

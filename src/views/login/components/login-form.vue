@@ -188,10 +188,13 @@ export default {
           return isAccountLogin.value ? userAccountLogin(form.account, form.password) : userMobileLogin(form.mobile, form.code)
         }
         getApi().then(({ result }) => {
-          // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息
+          // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息 4.获取购物车信息
           // 测试账号:zhousg  123456
           store.commit('user/setUserInfo', result)
-          router.push('/')
+          store.dispatch('cart/mergeLocalCart').then(() => {
+            Message({ text: '登录成功' })
+            router.push('/')
+          })
         })
           .catch(({ response }) => {
             Message({ type: 'error', text: response.data.message })
@@ -224,7 +227,7 @@ export default {
       if (count.value > 0) return // 禁止重复发送请求
       userMobileLoginMsg(form.mobile)
         .then((res) => {
-          console.log('res', res)
+          // console.log('res', res)
           // 3.倒计时,禁止期间再发请求
           // 方式一:自己写
           // count.value = 10

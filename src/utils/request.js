@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '@/store'
 const instance = axios.create({
   baseURL: 'http://pcapi-xiaotuxian-front.itheima.net/',
   timeout: 5000
@@ -9,6 +10,11 @@ const instance = axios.create({
 instance.interceptors.request.use(
   // 在发送请求之前做些什么
   (config) => {
+    const { userInfo } = store.state.user
+    if (userInfo.token) {
+      // 3. 设置token
+      config.headers.Authorization = `Bearer ${userInfo.token}`
+    }
     return config
   },
   // 对请求错误做些什么
