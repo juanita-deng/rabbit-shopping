@@ -148,6 +148,34 @@ export default {
           resolve()
         }
       })
+    },
+    // 更新购物车规格
+    updateCartSku(context, { newSku, oldSkuId }) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.userInfo.token) {
+          // TODO
+        } else {
+          // 1.先根据oldSkuId找到旧的那个商品信息
+          const oldSku = context.state.list.find((item) => item.skuId === oldSkuId)
+          // console.log('oldSku', oldSku)
+          //  2.删除旧的商品信息
+          context.commit('deleteCart', oldSkuId)
+          // 3.合并新的sku信息和老的sku信息
+          // console.log('new', newSku)
+          const assignSku = {
+            ...oldSku,
+            skuId: newSku.id,
+            nowPrice: newSku.price,
+            price: newSku.price,
+            stock: newSku.inventory,
+            attrsText: newSku.specs.reduce((cur, pre) => `${cur} ${pre.name}: ${pre.valueName}`, '')
+          }
+          // 4.插入新的sku
+          context.commit('insertCart', assignSku)
+          // 5.成功
+          resolve()
+        }
+      })
     }
   },
   getters: {

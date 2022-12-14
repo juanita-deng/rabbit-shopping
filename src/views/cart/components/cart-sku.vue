@@ -5,8 +5,8 @@
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="layer" v-if="visible">
-      <GoodsSku :skuId="skuId" :goods="goods"/>
-      <RabbitButton type="primary" size="mini" style="margin-left:60px">
+      <GoodsSku :skuId="skuId" :goods="goods" @changeSku="changeSku"/>
+      <RabbitButton type="primary" size="mini" style="margin-left:60px" @click="sumbit">
         确认
       </RabbitButton>
     </div>
@@ -17,6 +17,8 @@ import { onClickOutside } from '@vueuse/core'
 import { ref } from 'vue'
 import { getSpecsAndSkus } from '@/api/cart'
 import GoodsSku from '@/views/goods/components/goods-sku.vue'
+import { useStore } from 'vuex'
+import { Message } from '@/components'
 export default {
   name: 'CartSku',
   props: {
@@ -28,6 +30,8 @@ export default {
     const visible = ref(false)
     const target = ref(null)
     const goods = ref({})
+    const newSku = ref(null)
+    const store = useStore()
     const toggle = () => {
       visible.value = !visible.value
     }
@@ -37,7 +41,18 @@ export default {
     getSpecsAndSkus(props.skuId).then(({ result }) => {
       goods.value = result
     })
-    return { visible, toggle, target, goods }
+    const changeSku = (sku) => {
+      newSku.value = sku
+    }
+    // 提交:传递给父组件的条件:1.选择的规格完整 2.渲染的规格发生了改变
+    const sumbit = () => {
+      if (newSku.value.id && newSku.value.id !== props.skuId) {
+        store.dispatch('cart/updateCartSku', { newSku: newSku.value, oldSkuId: props.skuId })
+      } else {
+        Message({ type: 'warning', text: '请选择或修改商品规格' })
+      }
+    }
+    return { visible, toggle, target, goods, changeSku, sumbit }
   }
 }
 </script>
