@@ -137,9 +137,19 @@ export default {
         }
         userQQPatchLogin({ unionId: props.unionId, data: form })
           .then(({ result }) => {
+            // 1.存储用户信息
             store.commit('user/setUserInfo', result)
-            Message({ text: 'QQ完善信息成功' })
-            router.push('/')
+            // 2.合并购物车
+            store.dispatch('cart/mergeLocalCart').then(() => {
+            // 3.提示消息
+              Message({ text: 'QQ完善信息成功' })
+              // 4.跳转到首页
+              router.push('/')
+            })
+            // 登录后改成上面的
+            // store.commit('user/setUserInfo', result)
+            // Message({ text: 'QQ完善信息成功' })
+            // router.push('/')
           })
           .catch(({ response }) => {
             Message({ type: 'error', text: response.data.message })

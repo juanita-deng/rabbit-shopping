@@ -116,9 +116,15 @@ export default {
             unionId: props.unionId,
             ...form
           }).then(({ result }) => {
+            // 1.存储用户信息
             store.commit('user/setUserInfo', result)
-            Message({ text: '绑定成功' })
-            router.push('/')
+            // 2.合并购物车
+            store.dispatch('cart/mergeLocalCart').then(() => {
+            // 3.提示消息
+              Message({ text: '绑定成功' })
+              // 4.跳转到首页
+              router.push('/')
+            })
           })
       })
     }
