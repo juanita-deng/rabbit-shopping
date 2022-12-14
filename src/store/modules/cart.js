@@ -1,4 +1,4 @@
-import { getNewCartGoods, mergeLocalCart } from '@/api/cart'
+import { getNewCartGoods, mergeLocalCart, findCartList } from '@/api/cart'
 export default {
   namespaced: true,
   state: {
@@ -80,6 +80,10 @@ export default {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.userInfo.token) {
           // 若已登录发送请求获取购物车信息
+          findCartList().then(({ result }) => {
+            context.commit('setCartList', result)
+            resolve()
+          })
         } else {
           // 没有登录，需要发送请求进行商品信息更新(需要获取购物车所有商品的ID)
           const promiseArr = context.state.list.map((item) => {

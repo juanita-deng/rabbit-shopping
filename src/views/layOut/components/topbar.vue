@@ -38,6 +38,8 @@ export default {
     const userInfo = computed(() => store.state.user.userInfo)
     const logOut = () => {
       store.commit('user/setUserInfo', {})
+      // 退出登录后清空本地购物车信息
+      store.commit('cart/setCartList', [])
       router.push('/login')
       Message({ type: 'success', text: '退出成功' })
     }
