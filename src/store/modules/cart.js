@@ -162,7 +162,7 @@ export default {
           context.commit('deleteCart', oldSkuId)
           // 3.合并新的sku信息和老的sku信息
           // console.log('new', newSku)
-          const assignSku = {
+          const mergeSku = {
             ...oldSku,
             skuId: newSku.id,
             nowPrice: newSku.price,
@@ -171,7 +171,7 @@ export default {
             attrsText: newSku.specs.reduce((cur, pre) => `${cur} ${pre.name}: ${pre.valueName}`, '')
           }
           // 4.插入新的sku
-          context.commit('insertCart', assignSku)
+          context.commit('insertCart', mergeSku)
           // 5.成功
           resolve()
         }
