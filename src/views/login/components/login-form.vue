@@ -187,12 +187,16 @@ export default {
         const getApi = () => {
           return isAccountLogin.value ? userAccountLogin(form.account, form.password) : userMobileLogin(form.mobile, form.code)
         }
+        // 测试账号:zhousg  123456
         getApi().then(({ result }) => {
-          // 登录成功后:1.存储用户信息 2.跳转到首页 3.渲染首页头部信息 4.获取购物车信息
-          // 测试账号:zhousg  123456
+          // 登录成功后:
+          // 1.存储用户信息
           store.commit('user/setUserInfo', result)
+          // 2.合并购物车
           store.dispatch('cart/mergeLocalCart').then(() => {
+            // 3.提示消息
             Message({ text: '登录成功' })
+            // 4.跳转到首页
             router.push('/')
           })
         })
