@@ -16,6 +16,7 @@
             :goods="goods"
             skuId="1369155864430120962"
             @changeSku="changeSku"
+            :key="goods.id"
           />
           <!-- 数量选择组件 -->
           <RabbitNumbox v-model="num" :max="goods.inventory" />
