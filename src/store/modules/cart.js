@@ -1,4 +1,12 @@
-import { getNewCartGoods, mergeLocalCart, findCartList } from '@/api/cart'
+import {
+  getNewCartGoods,
+  mergeLocalCart,
+  findCartList,
+  insertCart,
+  deleteCart,
+  updateCart,
+  checkAllCart
+} from '@/api/cart'
 export default {
   namespaced: true,
   state: {
@@ -58,7 +66,7 @@ export default {
       const index = state.list.findIndex((item) => item.skuId === skuId)
       state.list.splice(index, 1)
     },
-    // 清空本地购物车
+    // 设置购物车列表
     setCartList(state, list) {
       state.list = list
     }
@@ -69,6 +77,10 @@ export default {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.userInfo.token) {
           // 已登录发送请求获取购物车信息
+          insertCart({ skuId: payload.skuId, count: payload.count }).then((res) => {
+            context.dispatch('updateCart')
+            resolve()
+          })
         } else {
           context.commit('insertCart', payload)
           resolve()
@@ -107,18 +119,25 @@ export default {
       return new Promise((resolve, reject) => {
         // 若已登录发送请求获取购物车信息
         if (context.rootState.user.userInfo.token) {
+          deleteCart([skuId]).then((res) => {
+            context.dispatch('updateCart')
+            resolve()
+          })
         } else {
           context.commit('deleteCart', skuId)
           resolve()
         }
       })
     },
-    // 更新购物车中单选操作
+    // 更新购物车中单选或者修改数量操作
     updateChange(context, payload) {
       return new Promise((resolve, reject) => {
         // 若已登录发送请求获取购物车信息
         if (context.rootState.user.userInfo.token) {
-          // TODO
+          updateCart(payload).then(() => {
+            context.dispatch('updateCart')
+            resolve()
+          })
         } else {
           context.commit('updateCart', payload)
           resolve()
@@ -130,7 +149,11 @@ export default {
       return new Promise((resolve, reject) => {
         // 若已登录发送请求获取购物车信息
         if (context.rootState.user.userInfo.token) {
-          // TODO
+          const ids = context.getters.validCartList.map((item) => item.skuId)
+          checkAllCart({ selected, ids }).then(() => {
+            context.dispatch('updateCart')
+            resolve()
+          })
         } else {
           // 获取有效的商品列表,便利调用修改mutation
           context.getters.validCartList.forEach((goods) => {
@@ -144,7 +167,14 @@ export default {
     batchDeleteCart(context, isClear) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.userInfo.token) {
-          // TODO
+          const skuIds = context.getters[isClear ? 'invalidCartList' : 'validCartList'].map((item) => {
+            return isClear ? item.skuId : item.selected && item.skuId
+          })
+          deleteCart(skuIds).then((res) => {
+            context.dispatch('updateCart')
+            resolve()
+          })
+          console.log('skuids', skuIds)
         } else {
           // 便利有效商品或者失效商品列表,批量提交mutation进行删除
           context.getters[
@@ -161,7 +191,16 @@ export default {
     updateCartSku(context, { newSku, oldSkuId }) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.userInfo.token) {
-          // TODO
+          // 1.发送请求删除旧的sku
+          deleteCart([oldSkuId]).then(() => {
+            // 2.发送请求新增新的sku,注意:count是旧的sku数量
+            context.dispatch('insertCart', {
+              skuId: newSku.id,
+              count: context.state.list.find((v) => v.skuId === oldSkuId).count
+            })
+            // 3.重新发送请求渲染(在insertCart中已处理)
+            resolve()
+          })
         } else {
           // 1.先根据oldSkuId找到旧的那个商品信息
           const oldSku = context.state.list.find((item) => item.skuId === oldSkuId)

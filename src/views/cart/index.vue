@@ -161,7 +161,7 @@
 import GoodsRecommend from '@/views/goods/components/goods-recommend.vue'
 import CartNone from './components/cart-none.vue'
 import CartSku from './components/cart-sku.vue'
-import { Confirm } from '@/components'
+import { Confirm, Message } from '@/components'
 import { useStore } from 'vuex'
 export default {
   name: 'RabbitCartPage',
@@ -180,7 +180,9 @@ export default {
     const deleteCart = (skuId) => {
       Confirm({ text: '您确认从购物车删除该商品吗？' })
         .then(() => {
-          store.dispatch('cart/deleteCart', skuId)
+          store.dispatch('cart/deleteCart', skuId).then(() => {
+            Message({ text: '删除成功' })
+          })
         })
         .catch(() => {
           // console.log('取消')
@@ -189,7 +191,9 @@ export default {
     const batchDeleteCart = (isClear) => {
       Confirm({ text: `您确定要${isClear ? '清空失效' : '删除选中'}的商品嘛` })
         .then(() => {
-          store.dispatch('cart/batchDeleteCart', isClear)
+          store.dispatch('cart/batchDeleteCart', isClear).then(() => {
+            Message({ text: '删除成功' })
+          })
         })
         .catch(() => {
           // console.log('取消')
