@@ -89,7 +89,7 @@ import { useCountDown } from '@/hooks'
 import { userQQPatchCode, userQQPatchLogin } from '@/api/user'
 import { Message } from '@/components'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 export default {
   name: 'CallbackPatch',
   components: {
@@ -115,6 +115,7 @@ export default {
     const target = ref(null)
     const store = useStore()
     const router = useRouter()
+    const route = useRoute()
     const sendCode = () => {
       const validateStatus = rules.mobile(form.mobile)
       if (validateStatus !== true) {
@@ -144,7 +145,7 @@ export default {
             // 3.提示消息
               Message({ text: 'QQ完善信息成功' })
               // 4.跳转到首页
-              router.push('/')
+              router.push(route.query.redirectUrl || '/')
             })
             // 登录后改成上面的
             // store.commit('user/setUserInfo', result)

@@ -52,7 +52,7 @@ import { userQQBindCode, userQQBindLogin } from '@/api/user'
 import { Message } from '@/components'
 import { useCountDown } from '@/hooks'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 export default {
   name: 'CallbackBind',
   components: {
@@ -106,6 +106,7 @@ export default {
     }
     const store = useStore()
     const router = useRouter()
+    const route = useRoute()
     const bindQQ = () => {
       target.value.validate().then((res) => {
         if (!res) {
@@ -123,7 +124,7 @@ export default {
             // 3.提示消息
               Message({ text: '绑定成功' })
               // 4.跳转到首页
-              router.push('/')
+              router.push(route.query.redirectUrl || '/')
             })
           })
       })

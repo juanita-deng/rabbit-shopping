@@ -133,7 +133,7 @@ import {
   userMobileLogin
 } from '@/api/user'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 // import { useIntervalFn } from '@vueuse/core'
 import { useCountDown } from '@/hooks/index'
 // import QC from 'qc'
@@ -172,6 +172,7 @@ export default {
     const target = ref(null)
     const store = useStore()
     const router = useRouter()
+    const route = useRoute()
     // 切换时清除历史数据
     watch(isAccountLogin, (val) => {
       form.mobile = null
@@ -197,7 +198,7 @@ export default {
             // 3.提示消息
             Message({ text: '登录成功' })
             // 4.跳转到首页
-            router.push('/')
+            router.push(route.query.redirectUrl || '/')
           })
         })
           .catch(({ response }) => {

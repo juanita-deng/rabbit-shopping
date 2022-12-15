@@ -149,7 +149,7 @@
           共 {{ $store.getters['cart/validTotal'] }} 件商品， 已选择
           {{ $store.getters['cart/selectedTotal'] }}件， 商品合计：
           <span class="red">¥{{ $store.getters['cart/selectedAmount'] }}</span>
-          <RabbitButton type="primary">下单结算</RabbitButton>
+          <RabbitButton type="primary" @click="goCheckout">下单结算</RabbitButton>
         </div>
       </div>
       <!-- 猜你喜欢 -->
@@ -163,6 +163,7 @@ import CartNone from './components/cart-none.vue'
 import CartSku from './components/cart-sku.vue'
 import { Confirm, Message } from '@/components'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 export default {
   name: 'RabbitCartPage',
   components: { GoodsRecommend, CartNone, CartSku },
@@ -184,9 +185,7 @@ export default {
             Message({ text: '删除成功' })
           })
         })
-        .catch(() => {
-          // console.log('取消')
-        })
+        .catch(() => {})
     }
     const batchDeleteCart = (isClear) => {
       Confirm({ text: `您确定要${isClear ? '清空失效' : '删除选中'}的商品嘛` })
@@ -199,7 +198,27 @@ export default {
           // console.log('取消')
         })
     }
-    return { changeChecked, changeAll, deleteCart, batchDeleteCart, changeCount }
+    /**
+     * 下单结算:
+     *    1.判断是否勾选了商品,如果没有,不跳转,且给提示
+     *    2.判断是否登录了,如果没有登录,给提示
+     *    3.如果用户登录了直接跳转到结算页面
+     */
+    const router = useRouter()
+    const goCheckout = () => {
+      if (store.getters['cart/selectedCartList'].length === 0) {
+        Message({ type: 'warning', text: '请至少选择一种商品' })
+        return
+      }
+      if (!store.state.user.userInfo.token) {
+        Confirm({ text: '结算功能需要登录,您是否要跳到登录?' }).then(() => {
+          router.push('/member/checkout')// 未登录已做重定向处理
+        }).catch(() => {})
+        return
+      }
+      router.push('/member/checkout')
+    }
+    return { changeChecked, changeAll, deleteCart, batchDeleteCart, changeCount, goCheckout }
   }
 }
 </script>

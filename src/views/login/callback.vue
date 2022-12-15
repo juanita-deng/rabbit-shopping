@@ -72,7 +72,9 @@ export default {
             // 3.提示消息
               Message({ text: '登录成功' })
               // 4.跳转到首页
-              router.push('/')
+              const redirectUrl = localStorage.getItem('redirectUrl') || '/'
+              localStorage.removeItem('redirectUrl')
+              router.push(redirectUrl)
             })
             // 登录后改成上面的
             // store.commit('user/setUserInfo', result)
