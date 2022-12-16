@@ -9,7 +9,14 @@
                 <li><span>联系方式：</span>{{defaultadress.contact}}</li>
                 <li><span>收货地址：</span>{{defaultadress.fullLocation?.replace(/ /g,'')+defaultadress.address}}</li>
               </ul>
-              <a href="javascript:;">修改地址</a>
+              <a href="javascript:;" @click="showDialog=true">修改地址</a>
+              <RabbitDialog title="切换收货地址" v-model:visible="showDialog">
+                表单
+                <template #footer>
+                    <RabbitButton type="gray" style="margin-right:20px" @click="showDialog = false">取消</RabbitButton>
+                    <RabbitButton type="primary" @click="showDialog = false">确认</RabbitButton>
+                </template>
+              </RabbitDialog>
             </div>
             <div class="action">
               <RabbitButton class="btn">切换地址</RabbitButton>
@@ -35,6 +42,7 @@ export default {
      *    2.如果没有,把数组的第一项作为默认的收货地址
      */
     const defaultadress = ref({})
+    const showDialog = ref(false)
     const isDefault = props.list.find((v) => v.isDefault === 0)
     watch(() => props.list, () => {
       if (isDefault?.id) {
@@ -43,7 +51,7 @@ export default {
         defaultadress.value = { ...props.list[0] }
       }
     }, { immediate: true, deep: true })
-    return { defaultadress }
+    return { defaultadress, showDialog }
   }
 }
 </script>
