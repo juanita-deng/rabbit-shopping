@@ -8,7 +8,7 @@
       </RabbitBread>
       <div class="wrapper">
         <!-- 收货地址 -->
-        <Checkout-Address :list="preorderInfo?.userAddresses"></Checkout-Address>
+        <Checkout-Address :list="preorderInfo?.userAddresses" @changeAddress="changeAddress"/>
         <!-- 商品信息 -->
         <h3 class="box-title">商品信息</h3>
         <div class="box-body">
@@ -85,7 +85,10 @@ export default {
     findCheckoutInfo().then(({ result }) => {
       preorderInfo.value = result
     })
-    return { preorderInfo }
+    const changeAddress = (addressId) => {
+      console.log('父组件获取ID', addressId)
+    }
+    return { preorderInfo, changeAddress }
   }
 }
 </script>

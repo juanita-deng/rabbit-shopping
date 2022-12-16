@@ -60,6 +60,8 @@ export default {
   }
   .wrapper {
     width: 600px;
+    max-height: 500px;
+    overflow-y: scroll;
     background: #fff;
     border-radius: 4px;
     position: absolute;

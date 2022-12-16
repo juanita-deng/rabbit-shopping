@@ -1,7 +1,7 @@
 <template>
   <div class="rabbit-city" ref="target">
     <div :class="['select', { active }]" @click="active = !active">
-      <span class="placeholder" v-if="!fullLocation">请选择配送地址</span>
+      <span class="placeholder" v-if="!fullLocation">{{ placeholder }}</span>
       <span class="value" v-else>{{ fullLocation }}</span>
       <i class="iconfont icon-angle-down"></i>
     </div>
@@ -28,6 +28,10 @@ export default {
     fullLocation: {
       type: String,
       default: ''
+    },
+    placeholder: {
+      type: String,
+      default: '请选择配送地址'
     }
   },
   setup(props, { emit }) {

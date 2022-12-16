@@ -3,55 +3,74 @@
         <div class="box-body">
           <div class="address">
             <div class="text">
-              <div class="none" v-if="!defaultadress">您需要先添加收货地址才可提交订单。</div>
+              <div class="none" v-if="!defaultAddress">您需要先添加收货地址才可提交订单。</div>
               <ul v-else>
-                <li><span>收<i/>货<i/>人：</span>{{defaultadress.receiver}}</li>
-                <li><span>联系方式：</span>{{defaultadress.contact}}</li>
-                <li><span>收货地址：</span>{{defaultadress.fullLocation?.replace(/ /g,'')+defaultadress.address}}</li>
+                <li><span>收<i/>货<i/>人：</span>{{defaultAddress.receiver}}</li>
+                <li><span>联系方式：</span>{{defaultAddress.contact}}</li>
+                <li><span>收货地址：</span>{{defaultAddress.fullLocation?.replace(/ /g,'')+defaultAddress.address}}</li>
               </ul>
-              <a href="javascript:;" @click="showDialog=true">修改地址</a>
-              <RabbitDialog title="切换收货地址" v-model:visible="showDialog">
-                表单
-                <template #footer>
-                    <RabbitButton type="gray" style="margin-right:20px" @click="showDialog = false">取消</RabbitButton>
-                    <RabbitButton type="primary" @click="showDialog = false">确认</RabbitButton>
-                </template>
-              </RabbitDialog>
+              <a href="javascript:;" @click="target.open()">修改地址</a>
             </div>
             <div class="action">
-              <RabbitButton class="btn">切换地址</RabbitButton>
-              <RabbitButton class="btn">添加地址</RabbitButton>
+              <RabbitButton class="btn" @click="showDialog=true">切换地址</RabbitButton>
+              <RabbitButton class="btn" @click="target.open()">添加地址</RabbitButton>
             </div>
+            <RabbitDialog title="切换收货地址" v-model:visible="showDialog">
+              <div :class="['text item',{active:item.id === selectAdrress?.id} ]" v-for="item in list" :key="item.id" @click="selectAdrress = item">
+                <ul>
+                  <li><span>收<i/>货<i/>人：</span>{{item.receiver}}</li>
+                  <li><span>联系方式：</span>{{item.contact}}</li>
+                  <li><span>收货地址：</span>{{item.fullLocation.replace(/ /g,'')+item.address}}</li>
+                </ul>
+              </div>
+              <template #footer>
+                  <RabbitButton type="gray" style="margin-right:20px" @click="showDialog = false">取消</RabbitButton>
+                  <RabbitButton type="primary" @click="confirm">确认</RabbitButton>
+              </template>
+            </RabbitDialog>
+            <checkout-edit ref="target"/>
           </div>
         </div>
 </template>
 
 <script>
 import { ref, watch } from 'vue'
+import checkoutEdit from './checkout-edit.vue'
 export default {
+  components: { checkoutEdit },
   props: {
     list: {
       type: Array,
       default: () => []
     }
   },
-  setup(props) {
+  emits: ['changeAddress'],
+  setup(props, { emit }) {
     /**
      * 确认默认的收获地址
      *    1.从list中查找isDefault为0的默认地址
      *    2.如果没有,把数组的第一项作为默认的收货地址
      */
-    const defaultadress = ref({})
+    const defaultAddress = ref({})
     const showDialog = ref(false)
     const isDefault = props.list.find((v) => v.isDefault === 0)
     watch(() => props.list, () => {
       if (isDefault?.id) {
-        defaultadress.value = isDefault
+        defaultAddress.value = isDefault
       } else {
-        defaultadress.value = { ...props.list[0] }
+        defaultAddress.value = { ...props.list[0] }
       }
-    }, { immediate: true, deep: true })
-    return { defaultadress, showDialog }
+    }, {
+      immediate: true, deep: true
+    })
+    const selectAdrress = ref(null)
+    const confirm = () => {
+      showDialog.value = false
+      defaultAddress.value = selectAdrress.value
+      emit('changeAddress', defaultAddress.value.id)
+    }
+    const target = ref(null)
+    return { defaultAddress, showDialog, confirm, selectAdrress, target }
   }
 }
 </script>
@@ -66,6 +85,19 @@ export default {
     min-height: 90px;
     display: flex;
     align-items: center;
+    &.item {
+     border: 1px solid #f5f5f5;
+     margin-bottom: 10px;
+     cursor: pointer;
+     &.active,&:hover {
+       border-color: @xtxColor;
+       background: lighten(@xtxColor,50%);
+     }
+     > ul {
+       padding: 10px;
+       font-size: 14px;
+     }
+   }
     .none {
       line-height: 90px;
       color: #999;
