@@ -3,7 +3,7 @@
         <div class="box-body">
           <div class="address">
             <div class="text">
-              <div class="none" v-if="!defaultAddress">您需要先添加收货地址才可提交订单。</div>
+              <div class="none" v-if="!defaultAddress.id">您需要先添加收货地址才可提交订单。</div>
               <ul v-else>
                 <li><span>收<i/>货<i/>人：</span>{{defaultAddress.receiver}}</li>
                 <li><span>联系方式：</span>{{defaultAddress.contact}}</li>
@@ -16,6 +16,7 @@
               <RabbitButton class="btn" @click="target.open()">添加地址</RabbitButton>
             </div>
             <RabbitDialog title="切换收货地址" v-model:visible="showDialog">
+              <div v-if="list.length === 0">暂无更多地址</div>
               <div :class="['text item',{active:item.id === selectAdrress?.id} ]" v-for="item in list" :key="item.id" @click="selectAdrress = item">
                 <ul>
                   <li><span>收<i/>货<i/>人：</span>{{item.receiver}}</li>
@@ -23,9 +24,11 @@
                   <li><span>收货地址：</span>{{item.fullLocation.replace(/ /g,'')+item.address}}</li>
                 </ul>
               </div>
-              <template #footer>
+              <template #footer >
+                <div v-if="list.length">
                   <RabbitButton type="gray" style="margin-right:20px" @click="showDialog = false">取消</RabbitButton>
                   <RabbitButton type="primary" @click="confirm">确认</RabbitButton>
+                </div>
               </template>
             </RabbitDialog>
             <checkout-edit ref="target"/>
