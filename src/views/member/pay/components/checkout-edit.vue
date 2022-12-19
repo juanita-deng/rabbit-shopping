@@ -16,13 +16,13 @@
       <div class="xtx-form-item">
         <div class="label">地区：</div>
         <div class="field">
-          <RabbitCity placeholder="请选择所在地区"/>
+          <RabbitCity placeholder="请选择所在地区" :fullLocation="formDate.fullLocation" @getCityInfo="getCityInfo"/>
         </div>
       </div>
       <div class="xtx-form-item">
         <div class="label">详细地址：</div>
         <div class="field">
-          <input class="input" placeholder="请输入详细地址" v-model="formDate.fullLocation"/>
+          <input class="input" placeholder="请输入详细地址" v-model="formDate.address"/>
         </div>
       </div>
       <div class="xtx-form-item">
@@ -52,13 +52,15 @@
       >
         取消
       </RabbitButton>
-      <RabbitButton type="primary" @click="showDialog = false">确认</RabbitButton>
+      <RabbitButton type="primary" @click="confirm">确认</RabbitButton>
     </template>
   </RabbitDialog>
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { inject, reactive, ref } from 'vue'
+import { addAddress } from '@/api/order'
+import { Message } from '@/components'
 export default {
   name: 'CheckoutEdit',
   setup() {
@@ -78,7 +80,21 @@ export default {
       isDefault: 0,
       fullLocation: ''
     })
-    return { showDialog, open, formDate }
+    const getCityInfo = (cityInfo) => {
+      formDate.cityCode = cityInfo.cityCode
+      formDate.countyCode = cityInfo.countyCode
+      formDate.provinceCode = cityInfo.provinceCode
+      formDate.fullLocation = cityInfo.provinceName + ' ' + cityInfo.cityName + ' ' + cityInfo.countyName
+    }
+    const getPreorderInfo = inject('getPreorderInfo')
+    const confirm = () => {
+      addAddress(formDate).then((res) => {
+        Message({ text: '添加收货地址成功' })
+        showDialog.value = false
+        getPreorderInfo()
+      })
+    }
+    return { showDialog, open, formDate, getCityInfo, confirm }
   }
 }
 </script>

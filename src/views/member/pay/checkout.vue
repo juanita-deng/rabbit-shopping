@@ -76,15 +76,19 @@
 <script>
 import { findCheckoutInfo } from '@/api/order'
 import CheckoutAddress from './components/checkout-address'
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 export default {
   name: 'RabbitPayCheckoutPage',
   components: { CheckoutAddress },
   setup() {
     const preorderInfo = ref(null)
-    findCheckoutInfo().then(({ result }) => {
-      preorderInfo.value = result
-    })
+    const getPreorderInfo = () => {
+      findCheckoutInfo().then(({ result }) => {
+        preorderInfo.value = result
+      })
+    }
+    getPreorderInfo()
+    provide('getPreorderInfo', getPreorderInfo)
     const changeAddress = (addressId) => {
       console.log('父组件获取ID', addressId)
     }
