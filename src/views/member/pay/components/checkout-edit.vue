@@ -1,5 +1,5 @@
 <template>
-  <RabbitDialog title="添加收货地址" v-model:visible="showDialog">
+  <RabbitDialog :title="formDate?.id ? '修改收货地址':'添加收货地址' "  v-model:visible="showDialog">
      <div class="xtx-form">
       <div class="xtx-form-item">
         <div class="label">收货人：</div>
@@ -58,17 +58,24 @@
 </template>
 
 <script>
-import { inject, reactive, ref } from 'vue'
-import { addAddress } from '@/api/order'
+import { inject, reactive, ref, watch } from 'vue'
+import { addAddress, editAddress } from '@/api/order'
 import { Message } from '@/components'
 export default {
   name: 'CheckoutEdit',
-  setup() {
+  setup(props, { emit }) {
     const showDialog = ref(false)
-    const open = () => {
+    const open = (defaultAddress) => {
+      if (defaultAddress?.id) { // 修改
+        // 用于回显
+        for (const k in defaultAddress) {
+          formDate[k] = defaultAddress[k]
+        }
+      }
       showDialog.value = true
     }
     const formDate = reactive({
+      id: '',
       receiver: '',
       contact: '',
       provinceCode: '',
@@ -87,13 +94,35 @@ export default {
       formDate.fullLocation = cityInfo.provinceName + ' ' + cityInfo.cityName + ' ' + cityInfo.countyName
     }
     const getPreorderInfo = inject('getPreorderInfo')
+    const editShowAddress = inject('editShowAddress')
     const confirm = () => {
-      addAddress(formDate).then((res) => {
-        Message({ text: '添加收货地址成功' })
-        showDialog.value = false
-        getPreorderInfo()
-      })
+      if (formDate.id) {
+        // 修改地址
+        editAddress(formDate).then(() => {
+          // 不需要发送请求更新
+          editShowAddress({ ...formDate })// 注意:传参要展开,否则获取的值是空的
+          Message({ text: '修改收货地址成功' })
+          showDialog.value = false
+        })
+      } else {
+        // 添加地址
+        addAddress(formDate).then(() => {
+          Message({ text: '添加收货地址成功' })
+          // 发送请求更新
+          getPreorderInfo()
+          showDialog.value = false
+        })
+      }
     }
+    watch(() => showDialog.value, (val) => {
+      if (!val) {
+        // 弹窗关闭后清空表单值
+        for (const k in formDate) {
+          formDate[k] = ''
+          formDate.isDefault = 0
+        }
+      }
+    })
     return { showDialog, open, formDate, getCityInfo, confirm }
   }
 }

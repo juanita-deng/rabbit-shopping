@@ -19,3 +19,14 @@ export const addAddress = address => {
     data: address
   })
 }
+/**
+ * 编辑收货地址信息
+ * @param {Object} address - 地址对象
+ */
+export const editAddress = address => {
+  return request({
+    method: 'put',
+    url: `/member/address/${address.id}`,
+    data: address
+  })
+}

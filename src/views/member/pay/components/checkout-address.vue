@@ -3,13 +3,13 @@
         <div class="box-body">
           <div class="address">
             <div class="text">
-              <div class="none" v-if="!defaultAddress.id">您需要先添加收货地址才可提交订单。</div>
+              <div class="none" v-if="!defaultAddress?.id">您需要先添加收货地址才可提交订单。</div>
               <ul v-else>
                 <li><span>收<i/>货<i/>人：</span>{{defaultAddress.receiver}}</li>
                 <li><span>联系方式：</span>{{defaultAddress.contact}}</li>
                 <li><span>收货地址：</span>{{defaultAddress.fullLocation?.replace(/ /g,'')+defaultAddress.address}}</li>
               </ul>
-              <a href="javascript:;" @click="target.open()">修改地址</a>
+              <a href="javascript:;" @click="target.open(defaultAddress)">修改地址</a>
             </div>
             <div class="action">
               <RabbitButton class="btn" @click="showDialog=true">切换地址</RabbitButton>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, provide } from 'vue'
 import checkoutEdit from './checkout-edit.vue'
 export default {
   components: { checkoutEdit },
@@ -73,6 +73,12 @@ export default {
       emit('changeAddress', defaultAddress.value.id)
     }
     const target = ref(null)
+    const editShowAddress = (address) => {
+      defaultAddress.value = address
+      selectAdrress.value = address
+    }
+    editShowAddress()
+    provide('editShowAddress', editShowAddress)
     return { defaultAddress, showDialog, confirm, selectAdrress, target }
   }
 }
