@@ -57,16 +57,18 @@ export default {
     const defaultAddress = ref({})
     const showDialog = ref(false)
     const isDefault = props.list.find((v) => v.isDefault === 0)
+    const selectAdrress = ref(null)
+
     watch(() => props.list, () => {
       if (isDefault?.id) {
         defaultAddress.value = isDefault
       } else {
         defaultAddress.value = { ...props.list[0] }
       }
+      selectAdrress.value = defaultAddress.value
     }, {
       immediate: true, deep: true
     })
-    const selectAdrress = ref(null)
     const confirm = () => {
       showDialog.value = false
       defaultAddress.value = selectAdrress.value
