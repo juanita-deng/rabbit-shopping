@@ -37,6 +37,12 @@
           <input class="input" placeholder="请输入地址标签，逗号分隔" v-model="formDate.addressTags"/>
         </div>
       </div>
+      <div class="xtx-form-item">
+        <div class="label">是否默认:</div>
+        <div class="field">
+            <RabbitSwitch :active="1" :inactive="0" v-model="formDate.isDefault" />
+        </div>
+      </div>
     </div>
     <template #footer>
       <RabbitButton
@@ -93,6 +99,9 @@ export default {
     &::placeholder {
       color: #ccc;
     }
+  }
+  .field {
+    line-height: 50px;
   }
 }
 .xtx-city {
