@@ -1,7 +1,8 @@
 import axios from 'axios'
 import store from '@/store'
+export const baseURL = 'http://pcapi-xiaotuxian-front.itheima.net/'
 const instance = axios.create({
-  baseURL: 'http://pcapi-xiaotuxian-front.itheima.net/',
+  baseURL,
   timeout: 5000
 })
 /**

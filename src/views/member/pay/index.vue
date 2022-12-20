@@ -24,7 +24,7 @@
         <div class="item">
           <p>支付平台</p>
           <a class="btn wx" href="javascript:;"></a>
-          <a class="btn alipay" href="javascript:;"></a>
+          <a class="btn alipay" :href="alipayUrl"></a>
         </div>
         <div class="item">
           <p>支付方式</p>
@@ -41,9 +41,10 @@
 <script>
 import { findOrder } from '@/api/order'
 import { useRoute } from 'vue-router'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useCountDown } from '@/hooks'
 import dayjs from 'dayjs'
+import { baseURL } from '@/utils/request'
 export default {
   name: 'RabbitPayPage',
   setup() {
@@ -61,7 +62,23 @@ export default {
     const formTime = (time) => {
       return dayjs.unix(time).format('mm分ss秒')
     }
-    return { payInfo, showTime, formTime }
+    /**
+     * 买家账号jfjbwb4477@sandbox.com
+     *     登录密码111111
+     *     支付密码111111
+     */
+    const alipayUrl = computed(() => {
+      if (payInfo.value) {
+        // 准备支付地址
+        const payUrl = baseURL + 'pay/aliPay'
+        // 回跳地址
+        const redirectUrl = encodeURIComponent('http://www.corho.com:8080/#/pay/callback')
+        return `${payUrl}?orderId=${payInfo.value.id}&redirect=${redirectUrl}`
+      } else {
+        return 'javascript:;'
+      }
+    })
+    return { payInfo, showTime, formTime, alipayUrl }
   }
 }
 </script>
