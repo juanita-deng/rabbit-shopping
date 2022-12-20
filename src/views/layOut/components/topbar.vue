@@ -4,9 +4,9 @@
       <ul>
         <template v-if="userInfo?.token">
           <li>
-            <a href="javascript:;">
+            <RouterLink to="/member">
               <i class="iconfont icon-user"></i>{{ userInfo.account }}
-            </a>
+            </RouterLink>
           </li>
           <li><a href="javascript:;" @click="logOut">退出登录</a></li>
         </template>
@@ -14,8 +14,8 @@
           <li><RouterLink to="/login">请先登录</RouterLink></li>
           <li><a href="javascript:;">免费注册</a></li>
         </template>
-        <li><a href="javascript:;">我的订单</a></li>
-        <li><a href="javascript:;">会员中心</a></li>
+        <li><RouterLink to="/member/order">我的订单</RouterLink></li>
+        <li><RouterLink to="/member">会员中心</RouterLink></li>
         <li><a href="javascript:;">帮助中心</a></li>
         <li><a href="javascript:;">关于我们</a></li>
         <li>

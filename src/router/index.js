@@ -57,6 +57,7 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+  linkExactActiveClass: 'active',
   scrollBehavior(to, from, savedPosition) {
     return {
       left: 0, // 注意:vue2中返回的是x,y
