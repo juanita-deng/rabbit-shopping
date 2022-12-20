@@ -9,7 +9,7 @@
                 <li><span>联系方式：</span>{{defaultAddress.contact}}</li>
                 <li><span>收货地址：</span>{{defaultAddress.fullLocation?.replace(/ /g,'')+defaultAddress.address}}</li>
               </ul>
-              <a href="javascript:;" @click="target.open(defaultAddress)">修改地址</a>
+              <a href="javascript:;" @click="target.open(defaultAddress)" v-if="defaultAddress?.id">修改地址</a>
             </div>
             <div class="action">
               <RabbitButton class="btn" @click="showDialog=true">切换地址</RabbitButton>
