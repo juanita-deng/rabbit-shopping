@@ -67,16 +67,18 @@
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <RabbitButton type="primary">提交订单</RabbitButton>
+          <RabbitButton type="primary" @click="submit">提交订单</RabbitButton>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { findCheckoutInfo } from '@/api/order'
+import { findCheckoutInfo, createOrder } from '@/api/order'
 import CheckoutAddress from './components/checkout-address'
-import { provide, ref } from 'vue'
+import { provide, ref, reactive } from 'vue'
+import { Message } from '@/components'
+import { useRouter } from 'vue-router'
 export default {
   name: 'RabbitPayCheckoutPage',
   components: { CheckoutAddress },
@@ -85,14 +87,33 @@ export default {
     const getPreorderInfo = () => {
       findCheckoutInfo().then(({ result }) => {
         preorderInfo.value = result
+        requestParams.goods = result.goods.map((item) => {
+          return { skuId: item.skuId, count: item.count }
+        })
       })
     }
     getPreorderInfo()
     provide('getPreorderInfo', getPreorderInfo)
     const changeAddress = (addressId) => {
-      console.log('父组件获取ID', addressId)
+      requestParams.addressId = addressId
     }
-    return { preorderInfo, changeAddress }
+    // 需要提交的字段
+    const requestParams = reactive({
+      addressId: null,
+      deliveryTimeType: 1,
+      payType: 1,
+      buyerMessage: '',
+      goods: []
+    })
+    const router = useRouter()
+    const submit = () => {
+      createOrder(requestParams).then(({ result }) => {
+        router.push(`/member/pay?id=${result.id}`)
+      }).catch(({ response }) => {
+        Message({ type: 'warning', text: response.data.message })
+      })
+    }
+    return { preorderInfo, changeAddress, submit }
   }
 }
 </script>

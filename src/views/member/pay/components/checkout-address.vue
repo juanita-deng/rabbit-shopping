@@ -66,6 +66,7 @@ export default {
         defaultAddress.value = { ...props.list[0] }
       }
       selectAdrress.value = defaultAddress.value
+      emit('changeAddress', defaultAddress.value.id)
     }, {
       immediate: true, deep: true
     })

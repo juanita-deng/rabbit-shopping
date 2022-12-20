@@ -30,3 +30,14 @@ export const editAddress = address => {
     data: address
   })
 }
+/**
+ * 提交订单
+ * @param {Object} order - 订单信息对象
+ */
+export const createOrder = order => {
+  return request({
+    method: 'post',
+    url: '/member/order',
+    data: order
+  })
+}
