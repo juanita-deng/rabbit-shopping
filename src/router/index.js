@@ -16,30 +16,41 @@ const routes = [
       {
         path: '/product/:id',
         component: () => import('@/views/goods')
+      },
+      {
+        path: '/cart',
+        component: () => import('@/views/cart')
+      },
+      {
+        path: '/member/checkout',
+        component: () => import('@/views/member/pay/checkout')
+      },
+      {
+        path: '/member/pay',
+        component: () => import('@/views/member/pay/index')
+      },
+      {
+        path: '/pay/callback',
+        component: () => import('@/views/member/pay/pay-result.vue')
+      },
+      {
+        path: '/member',
+        component: () => import('@/views/member/layout'),
+        children: [
+          {
+            path: '/member',
+            component: () => import('@/views/member/home')
+          },
+          {
+            path: '/member/order',
+            component: () => import('@/views/member/order')
+          }
+        ]
       }
     ]
   },
   { path: '/login', component: () => import('@/views/login/index') }, // 路由懒加载
-  {
-    path: '/login/callback',
-    component: () => import('@/views/login/callback.vue')
-  },
-  {
-    path: '/cart',
-    component: () => import('@/views/cart')
-  },
-  {
-    path: '/member/checkout',
-    component: () => import('@/views/member/pay/checkout')
-  },
-  {
-    path: '/member/pay',
-    component: () => import('@/views/member/pay/index')
-  },
-  {
-    path: '/pay/callback',
-    component: () => import('@/views/member/pay/pay-result.vue')
-  },
+  { path: '/login/callback', component: () => import('@/views/login/callback.vue') },
   { path: '/test', component: () => import('@/views/test/createVNode.vue') }
 ]
 
