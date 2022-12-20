@@ -47,7 +47,10 @@ export const useCountDown = (num = 60) => {
   const { pause, resume } = useIntervalFn(
     () => {
       count.value--
-      if (count.value <= 0) pause()
+      if (count.value <= 0) {
+        count.value = 0
+        pause()
+      }
     },
     1000,
     { immediate: false }

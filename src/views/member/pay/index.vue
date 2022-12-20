@@ -11,11 +11,11 @@
         <span class="icon iconfont icon-queren2"></span>
         <div class="tip">
           <p>订单提交成功！请尽快完成支付。</p>
-          <p>支付还剩 <span>24分59秒</span>, 超时后将取消订单</p>
+          <p>支付还剩 <span>{{formTime(showTime)}}</span>, 超时后将取消订单</p>
         </div>
         <div class="amount">
           <span>应付总额：</span>
-          <span>¥5673.00</span>
+          <span>¥{{payInfo.totalMoney}}</span>
         </div>
       </div>
       <!-- 付款方式 -->
@@ -39,8 +39,30 @@
   </div>
 </template>
 <script>
+import { findOrder } from '@/api/order'
+import { useRoute } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useCountDown } from '@/hooks'
+import dayjs from 'dayjs'
 export default {
-  name: 'RabbitPayPage'
+  name: 'RabbitPayPage',
+  setup() {
+    const route = useRoute()
+    const payInfo = ref({})
+    const showTime = ref(null)
+    findOrder(route.query.id).then(({ result }) => {
+      payInfo.value = result
+      const { count, start } = useCountDown(result.countdown)
+      start()
+      watch(count, () => {
+        showTime.value = count.value
+      }, { immediate: true })
+    })
+    const formTime = (time) => {
+      return dayjs.unix(time).format('mm分ss秒')
+    }
+    return { payInfo, showTime, formTime }
+  }
 }
 </script>
 <style scoped lang="less">
