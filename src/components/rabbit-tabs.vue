@@ -32,15 +32,30 @@ export default {
     return { changeTab, activeName }
   },
   render() {
-    const panel = this.$slots.default()
-
-    const navs = <nav>
-      {panel.map((item) => (
-        <a href="javascript:;" class={{ active: this.activeName === item.props.name }} onClick={() => this.changeTab(item)}>
-          {item.props.label}
-        </a>
-      ))}
-    </nav>
+    const slot = this.$slots.default()
+    const panel = []
+    slot.forEach((item) => {
+      if (item.type.name === 'RabbitTabsPanel') {
+        panel.push(item)
+      } else {
+        item.children.forEach((i) => {
+          panel.push(i)
+        })
+      }
+    })
+    const navs = (
+      <nav>
+        {panel.map((item) => (
+          <a
+            href="javascript:;"
+            class={{ active: this.activeName === item.props.name }}
+            onClick={() => this.changeTab(item)}
+          >
+            {item.props.label}
+          </a>
+        ))}
+      </nav>
+    )
     return <div class="rabbit-tabs">{[navs, panel]}</div>
   }
 }
