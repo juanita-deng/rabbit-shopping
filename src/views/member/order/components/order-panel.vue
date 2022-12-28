@@ -6,7 +6,7 @@
       <!-- 未付款，倒计时时间还有 -->
       <span class="down-time" v-if="order.orderState === 1">
         <i class="iconfont icon-down-time"></i>
-        <b v-if="order.countdown > 0">付款截止：28分20秒</b>
+        <b v-if="order.countdown > 0">付款截止：{{ formTime }}</b>
         <b v-else>该订单已超时</b>
       </span>
       <!-- 已完成 已取消 -->
@@ -61,7 +61,7 @@
         <!-- 待评价：查看详情，再次购买，申请售后 -->
         <!-- 已完成：查看详情，再次购买，申请售后 -->
         <!-- 已取消：查看详情 -->
-        <RabbitButton v-if="order.orderState === 1" type="primary" size="small">
+        <RabbitButton v-if="order.orderState === 1 && order.countdown > 0" type="primary" size="small">
           立即付款
         </RabbitButton>
         <RabbitButton v-if="order.orderState === 3" type="primary" size="small">
@@ -83,6 +83,7 @@
 <script>
 import { RouterLink } from 'vue-router'
 import { orderStatus } from '@/api/constant'
+import { useCountDownText } from '@/hooks'
 export default {
   name: 'OrderPanel',
   props: {
@@ -92,9 +93,12 @@ export default {
     }
   },
   components: { RouterLink },
-  setup() {
+  setup(props) {
+    const { formTime, start } = useCountDownText()
+    start(props.order.countdown)
     return {
-      orderStatus
+      orderStatus,
+      formTime
     }
   }
 }
