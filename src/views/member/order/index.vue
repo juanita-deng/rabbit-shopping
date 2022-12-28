@@ -17,7 +17,7 @@
       :order="order"
     />
   </div>
-  <RabbitPagination :pageSize="reqParm.pageSize" :currentPage="reqParm.page" :total="total" @changePage="changePage"/>
+  <RabbitPagination :pageSize="reqParm.pageSize" :currentPage="reqParm.page" :total="orderList.counts" @changePage="changePage"/>
 </template>
 
 <script>
@@ -42,7 +42,6 @@ export default {
       orderState: 0
     })
     const orderList = ref({})
-    const total = ref(null)
     const loading = ref(false)
     const changePage = (val) => {
       reqParm.page = val
@@ -51,15 +50,13 @@ export default {
       loading.value = true
       findOrderList(reqParm).then(({ result }) => {
         loading.value = false
-        console.log('res', result)
-        total.value = result.counts
         orderList.value = result
       })
     }, {
       immediate: true,
       deep: true
     })
-    return { active, tabClick, orderStatus, orderList, reqParm, total, loading, changePage }
+    return { active, tabClick, orderStatus, orderList, reqParm, loading, changePage }
   }
 }
 </script>
