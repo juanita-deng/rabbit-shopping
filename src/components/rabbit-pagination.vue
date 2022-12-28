@@ -1,5 +1,5 @@
 <template>
-  <div class="xtx-pagination">
+  <div class="xtx-pagination" v-show="total > 0">
     <a
       href="javascript:;"
       :class="{ disabled: myCurrrentPage === 1 }"

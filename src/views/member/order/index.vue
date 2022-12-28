@@ -9,17 +9,19 @@
   </RabbitTabs>
   <!-- 订单列表 -->
   <div class="order-list">
+    <div v-if="loading" class="loading"></div>
+    <div class="none" v-if="!loading && orderList.items.length === 0">暂无数据</div>
     <OrderPanel
       v-for="order in orderList.items"
       :key="order.id"
       :order="order"
     />
   </div>
-  <RabbitPagination />
+  <RabbitPagination :pageSize="reqParm.pageSize" :currentPage="reqParm.page" :total="total" @changePage="changePage"/>
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { orderStatus } from '@/api/constant'
 import { findOrderList } from '@/api/order'
 import OrderPanel from './components/order-panel.vue'
@@ -30,20 +32,34 @@ export default {
   },
   setup() {
     const active = ref('all')
-    const tabClick = ({ name, label }) => {
-      console.log('name', name, label)
+    const tabClick = ({ index }) => {
+      reqParm.orderState = index
+      reqParm.page = 1
     }
     const reqParm = reactive({
       page: 1,
-      pageSize: 10,
+      pageSize: 5,
       orderState: 0
     })
     const orderList = ref({})
-    findOrderList(reqParm).then(({ result }) => {
-      console.log('res', result)
-      orderList.value = result
+    const total = ref(null)
+    const loading = ref(false)
+    const changePage = (val) => {
+      reqParm.page = val
+    }
+    watch(() => reqParm, () => {
+      loading.value = true
+      findOrderList(reqParm).then(({ result }) => {
+        loading.value = false
+        console.log('res', result)
+        total.value = result.counts
+        orderList.value = result
+      })
+    }, {
+      immediate: true,
+      deep: true
     })
-    return { active, tabClick, orderStatus, orderList }
+    return { active, tabClick, orderStatus, orderList, reqParm, total, loading, changePage }
   }
 }
 </script>
@@ -52,5 +68,21 @@ export default {
 .order-list {
   background: #fff;
   padding: 20px;
+  position: relative;
+  min-height: 400px;
+}
+.loading {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(255,255,255,.9) url(~@/assets/images/loading.gif) no-repeat center;
+}
+.none {
+  height: 400px;
+  text-align: center;
+  line-height: 400px;
+  color: #999;
 }
 </style>

@@ -25,9 +25,9 @@ export default {
     // )
     const activeName = useVModel(props, 'modelValue', emit)
     provide('activeName', activeName) // 注意:此处不能用activeName.value否则inject检测不到变化
-    const changeTab = (item) => {
+    const changeTab = (item, index) => {
       activeName.value = item.props.name
-      emit('tab-click', { label: item.props.label, name: item.props.name })
+      emit('tab-click', { index })
     }
     return { changeTab, activeName }
   },
@@ -45,11 +45,11 @@ export default {
     })
     const navs = (
       <nav>
-        {panel.map((item) => (
+        {panel.map((item, index) => (
           <a
             href="javascript:;"
             class={{ active: this.activeName === item.props.name }}
-            onClick={() => this.changeTab(item)}
+            onClick={() => this.changeTab(item, index)}
           >
             {item.props.label}
           </a>
