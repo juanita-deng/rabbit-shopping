@@ -1,12 +1,16 @@
 <template>
-  <div class="xtx-dialog" :class="{fade}" v-if="visible">
-    <div class="wrapper" :class="{fade}" ref="target">
+  <div class="xtx-dialog" :class="{ fade }" v-if="visible">
+    <div class="wrapper" :class="{ fade }" ref="target">
       <div class="header">
-        <h3>{{title}}</h3>
-        <a href="JavaScript:;" class="iconfont icon-close-new" @click="close"></a>
+        <h3>{{ title }}</h3>
+        <a
+          href="JavaScript:;"
+          class="iconfont icon-close-new"
+          @click="close"
+        ></a>
       </div>
       <div class="body">
-        <slot/>
+        <slot />
       </div>
       <div class="footer">
         <slot name="footer"></slot>
@@ -28,12 +32,18 @@ export default {
   },
   setup(props, { emit }) {
     const fade = ref(false)
-    watch(() => props.visible, () => {
-      // 结构和样式同时加上无过度效果，需要些延时。
-      setTimeout(() => {
-        fade.value = true
-      })
-    })
+    watch(
+      () => props.visible,
+      () => {
+        // 结构和样式同时加上无过度效果，需要些延时。
+        setTimeout(() => {
+          fade.value = true
+        })
+      },
+      {
+        immediate: true
+      }
+    )
     const close = () => {
       emit('update:visible', false)
     }
@@ -53,10 +63,10 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 8887;
-  background: rgba(0,0,0,0);
+  background: rgba(0, 0, 0, 0);
   &.fade {
     transition: all 0.4s;
-    background: rgba(0,0,0,.5);
+    background: rgba(0, 0, 0, 0.5);
   }
   .wrapper {
     width: 600px;
@@ -67,11 +77,11 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-80%);
+    transform: translate(-50%, -80%);
     opacity: 0;
     &.fade {
       transition: all 0.4s;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       opacity: 1;
     }
     .body {

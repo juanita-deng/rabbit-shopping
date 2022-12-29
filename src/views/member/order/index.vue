@@ -10,14 +10,23 @@
   <!-- 订单列表 -->
   <div class="order-list">
     <div v-if="loading" class="loading"></div>
-    <div class="none" v-if="!loading && orderList.items.length === 0">暂无数据</div>
+    <div class="none" v-if="!loading && orderList.items.length === 0">
+      暂无数据
+    </div>
     <OrderPanel
       v-for="order in orderList.items"
       :key="order.id"
       :order="order"
+      @cancelOrder="cancelOrder"
     />
+    <OrderCancel ref="target"/>
   </div>
-  <RabbitPagination :pageSize="reqParm.pageSize" :currentPage="reqParm.page" :total="orderList.counts" @changePage="changePage"/>
+  <RabbitPagination
+    :pageSize="reqParm.pageSize"
+    :currentPage="reqParm.page"
+    :total="orderList.counts"
+    @changePage="changePage"
+  />
 </template>
 
 <script>
@@ -25,10 +34,12 @@ import { reactive, ref, watch } from 'vue'
 import { orderStatus } from '@/api/constant'
 import { findOrderList } from '@/api/order'
 import OrderPanel from './components/order-panel.vue'
+import OrderCancel from './components/order-cancel.vue'
 export default {
   name: 'RabbitOrder',
   components: {
-    OrderPanel
+    OrderPanel,
+    OrderCancel
   },
   setup() {
     const active = ref('all')
@@ -46,17 +57,35 @@ export default {
     const changePage = (val) => {
       reqParm.page = val
     }
-    watch(() => reqParm, () => {
-      loading.value = true
-      findOrderList(reqParm).then(({ result }) => {
-        loading.value = false
-        orderList.value = result
-      })
-    }, {
-      immediate: true,
-      deep: true
-    })
-    return { active, tabClick, orderStatus, orderList, reqParm, loading, changePage }
+    const target = ref(null)
+    const cancelOrder = (order) => {
+      target.value.open(order)
+    }
+    watch(
+      () => reqParm,
+      () => {
+        loading.value = true
+        findOrderList(reqParm).then(({ result }) => {
+          loading.value = false
+          orderList.value = result
+        })
+      },
+      {
+        immediate: true,
+        deep: true
+      }
+    )
+    return {
+      active,
+      tabClick,
+      orderStatus,
+      orderList,
+      reqParm,
+      loading,
+      changePage,
+      cancelOrder,
+      target
+    }
   }
 }
 </script>
@@ -74,7 +103,8 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  background: rgba(255,255,255,.9) url(~@/assets/images/loading.gif) no-repeat center;
+  background: rgba(255, 255, 255, 0.9) url(~@/assets/images/loading.gif)
+    no-repeat center;
 }
 .none {
   height: 400px;

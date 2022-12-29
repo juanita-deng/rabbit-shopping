@@ -68,7 +68,7 @@
           确认收货
         </RabbitButton>
         <p><a href="javascript:;">查看详情</a></p>
-        <p v-if="order.orderState === 1"><a href="javascript:;">取消订单</a></p>
+        <p v-if="order.orderState === 1" @click="cancelOrder(order)"><a href="javascript:;" >取消订单</a></p>
         <p v-if="[2, 3, 4, 5].includes(order.orderState)">
           <a href="javascript:;">再次购买</a>
         </p>
@@ -93,12 +93,16 @@ export default {
     }
   },
   components: { RouterLink },
-  setup(props) {
+  setup(props, { emit }) {
     const { formTime, start } = useCountDownText()
     start(props.order.countdown)
+    const cancelOrder = (order) => {
+      emit('cancelOrder', order)
+    }
     return {
       orderStatus,
-      formTime
+      formTime,
+      cancelOrder
     }
   }
 }

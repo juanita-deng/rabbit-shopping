@@ -65,3 +65,16 @@ export const findOrderList = ({ orderState = 0, page = 1, pageSize = 10 }) => {
     params: { orderState, page, pageSize }
   })
 }
+/**
+ * 取消订单
+ * @param {String} orderId - 订单ID
+ * @param {String} cancelReason - 取消原因
+ * @returns Promise
+ */
+export const cancelOrder = ({ orderId, cancelReason }) => {
+  return request({
+    method: 'put',
+    url: '/member/order/cancel',
+    data: { cancelReason, orderId }
+  })
+}
