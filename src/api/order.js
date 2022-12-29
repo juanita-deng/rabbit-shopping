@@ -74,7 +74,7 @@ export const findOrderList = ({ orderState = 0, page = 1, pageSize = 10 }) => {
 export const cancelOrder = ({ orderId, cancelReason }) => {
   return request({
     method: 'put',
-    url: '/member/order/cancel',
-    data: { cancelReason, orderId }
+    url: `/member/order/${orderId}/cancel`,
+    data: { cancelReason }
   })
 }

@@ -32,8 +32,6 @@ export default {
       cancelOrders.value = order
       // 清除之前选中原因
       curText.value = ''
-      // 更新订单状态
-      order.value.orderState = 6
     }
     // 选中的取消原因
     const curText = ref('')
@@ -41,6 +39,10 @@ export default {
       if (!curText.value) return Message({ type: 'warning', text: '请选择取消订单的原因' })
       cancelOrder({ orderId: cancelOrders.value.id, cancelReason: curText.value }).then((res) => {
         Message({ text: '取消成功' })
+        // 更新订单状态
+        cancelOrders.value.orderState = 6
+        // 关闭对话框
+        visibleDialog.value = false
       }).catch(({ response }) => {
         Message({ type: 'error', text: response.data.message })
       })
