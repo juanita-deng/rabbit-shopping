@@ -61,14 +61,37 @@
         <!-- 待评价：查看详情，再次购买，申请售后 -->
         <!-- 已完成：查看详情，再次购买，申请售后 -->
         <!-- 已取消：查看详情 -->
-        <RabbitButton v-if="order.orderState === 1 && order.countdown > 0" type="primary" size="small">
+        <RabbitButton
+          v-if="order.orderState === 1 && order.countdown > 0"
+          type="primary"
+          size="small"
+          @click="$router.push(`/member/pay?id=${order.id}`)"
+        >
           立即付款
         </RabbitButton>
-        <RabbitButton v-if="order.orderState === 3" type="primary" size="small">
+        <RabbitButton
+          v-if="order.orderState === 3"
+          type="primary"
+          size="small"
+          @click="$emit('confirmOrder', order)"
+        >
           确认收货
         </RabbitButton>
         <p><a href="javascript:;">查看详情</a></p>
-        <p v-if="order.orderState === 1" @click="cancelOrder(order)"><a href="javascript:;" >取消订单</a></p>
+        <p v-if="order.orderState === 1" @click="$emit('cancelOrder', order)">
+          <a href="javascript:;">取消订单</a>
+        </p>
+        <!-- 删除任务 -->
+        <p>
+          <a
+            @click="$emit('deleteOrder', order)"
+            v-if="[5, 6].includes(order.orderState)"
+            href="javascript:;"
+            class="del"
+          >
+            删除
+          </a>
+        </p>
         <p v-if="[2, 3, 4, 5].includes(order.orderState)">
           <a href="javascript:;">再次购买</a>
         </p>
@@ -89,20 +112,16 @@ export default {
   props: {
     order: {
       type: Object,
-      default: () => { }
+      default: () => {}
     }
   },
   components: { RouterLink },
-  setup(props, { emit }) {
+  setup(props) {
     const { formTime, start } = useCountDownText()
     start(props.order.countdown)
-    const cancelOrder = (order) => {
-      emit('cancelOrder', order)
-    }
     return {
       orderStatus,
-      formTime,
-      cancelOrder
+      formTime
     }
   }
 }

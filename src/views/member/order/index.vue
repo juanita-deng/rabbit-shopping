@@ -18,8 +18,10 @@
       :key="order.id"
       :order="order"
       @cancelOrder="cancelOrder"
+      @deleteOrder="deleteOrder"
+      @confirmOrder="confirmOrder"
     />
-    <OrderCancel ref="target"/>
+    <OrderCancel ref="target" />
   </div>
   <RabbitPagination
     :pageSize="reqParm.pageSize"
@@ -32,9 +34,10 @@
 <script>
 import { reactive, ref, watch } from 'vue'
 import { orderStatus } from '@/api/constant'
-import { findOrderList } from '@/api/order'
+import { findOrderList, delteOrder } from '@/api/order'
 import OrderPanel from './components/order-panel.vue'
 import OrderCancel from './components/order-cancel.vue'
+import { Confirm, Message } from '@/components'
 export default {
   name: 'RabbitOrder',
   components: {
@@ -58,17 +61,49 @@ export default {
       reqParm.page = val
     }
     const target = ref(null)
+    // 取消订单
     const cancelOrder = (order) => {
       target.value.open(order)
+    }
+    // 删除订单
+    const deleteOrder = (order) => {
+      Confirm({ text: '确定要删除该笔订单吗?' })
+        .then(() => {
+          delteOrder([order.id]).then(() => {
+            Message({ text: '删除成功' })
+            getOrderList()
+          })
+        })
+        .catch(() => {})
+    }
+    // 确认收货
+    /**
+     * 温馨提示：
+     * 接口服务器地址 + member/order/consignment/ + 订单ID
+     * https://apipc-xiaotuxian-front.itheima.net/member/order/consignment/1423804938656878594
+     * 改成已发货状态，后面订单号改成，自己的订单编号。
+     */
+    const confirmOrder = (order) => {
+      Confirm({ text: '确定要收货吗?' })
+        .then(() => {
+          delteOrder(order.id).then(() => {
+            Message({ text: '确认收货成功' })
+            getOrderList()
+          })
+        })
+        .catch(() => {})
+    }
+    const getOrderList = () => {
+      loading.value = true
+      findOrderList(reqParm).then(({ result }) => {
+        loading.value = false
+        orderList.value = result
+      })
     }
     watch(
       () => reqParm,
       () => {
-        loading.value = true
-        findOrderList(reqParm).then(({ result }) => {
-          loading.value = false
-          orderList.value = result
-        })
+        getOrderList()
       },
       {
         immediate: true,
@@ -84,7 +119,9 @@ export default {
       loading,
       changePage,
       cancelOrder,
-      target
+      target,
+      deleteOrder,
+      confirmOrder
     }
   }
 }
