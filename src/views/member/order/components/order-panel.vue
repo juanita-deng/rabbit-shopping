@@ -83,7 +83,11 @@
         >
           确认收货
         </RabbitButton>
-        <p><a href="javascript:;">查看详情</a></p>
+        <p>
+          <RouterLink :to="`/member/order/detail/${order.id}`">
+            查看详情
+          </RouterLink>
+        </p>
         <p v-if="order.orderState === 1" @click="$emit('cancelOrder', order)">
           <a href="javascript:;">取消订单</a>
         </p>

@@ -1,7 +1,8 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, RouterView } from 'vue-router'
 import store from '@/store'
 import layOut from '@/views/layOut/index'
 import home from '@/views/home'
+import { h } from 'vue'
 const routes = [
   {
     path: '/',
@@ -41,23 +42,40 @@ const routes = [
             path: '/member',
             component: () => import('@/views/member/home')
           },
+          /**
+           * vue3对于router-link-active做了修改
+           * https://github.com/vuejs/rfcs/blob/master/active-rfcs/0028-router-active-link.md#unrelated-but-similiar-routes
+           */
           {
             path: '/member/order',
-            component: () => import('@/views/member/order')
+            component: { render: () => h(RouterView) },
+            children: [
+              {
+                path: '/member/order',
+                component: () => import('@/views/member/order')
+              },
+              {
+                path: '/member/order/detail/:id',
+                component: () => import('@/views/member/order/detail.vue')
+              }
+            ]
           }
         ]
       }
     ]
   },
   { path: '/login', component: () => import('@/views/login/index') }, // 路由懒加载
-  { path: '/login/callback', component: () => import('@/views/login/callback.vue') },
+  {
+    path: '/login/callback',
+    component: () => import('@/views/login/callback.vue')
+  },
   { path: '/test', component: () => import('@/views/test/createVNode.vue') }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-  linkExactActiveClass: 'active',
+  // linkExactActiveClass: 'active',
   scrollBehavior(to, from, savedPosition) {
     return {
       left: 0, // 注意:vue2中返回的是x,y
