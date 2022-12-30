@@ -20,8 +20,12 @@
       @cancelOrder="cancelOrder"
       @deleteOrder="deleteOrder"
       @confirmOrder="confirmOrder"
+      @checkLogistics="checkLogistics"
     />
+    <!-- 取消订单 -->
     <OrderCancel ref="target" />
+    <!-- 查看物流 -->
+    <OrderLogistics ref="logisticsDom" />
   </div>
   <RabbitPagination
     :pageSize="reqParm.pageSize"
@@ -37,12 +41,14 @@ import { orderStatus } from '@/api/constant'
 import { findOrderList, delteOrder } from '@/api/order'
 import OrderPanel from './components/order-panel.vue'
 import OrderCancel from './components/order-cancel.vue'
+import OrderLogistics from './components/order-logistics.vue'
 import { Confirm, Message } from '@/components'
 export default {
   name: 'RabbitOrder',
   components: {
     OrderPanel,
-    OrderCancel
+    OrderCancel,
+    OrderLogistics
   },
   setup() {
     const active = ref('all')
@@ -93,6 +99,11 @@ export default {
         })
         .catch(() => {})
     }
+    // 查看物流
+    const logisticsDom = ref(null)
+    const checkLogistics = (order) => {
+      logisticsDom.value.open(order)
+    }
     const getOrderList = () => {
       loading.value = true
       findOrderList(reqParm).then(({ result }) => {
@@ -121,7 +132,9 @@ export default {
       cancelOrder,
       target,
       deleteOrder,
-      confirmOrder
+      confirmOrder,
+      checkLogistics,
+      logisticsDom
     }
   }
 }

@@ -94,10 +94,23 @@ export const delteOrder = (ids) => {
 }
 /**
  * 确认收货
+ * @param {String} orderId - 订单ID
+ * @returns Promise
  */
 export const confirmOrder = (orderId) => {
   return request({
     method: 'put',
     url: `/member/order/${orderId}/receipt`
+  })
+}
+/**
+ * 查看物流
+ * @param {String} id - 订单ID
+ * @returns
+ */
+export const logisticsOrder = (id) => {
+  return request({
+    url: `/member/order/${id}/logistics`,
+    method: 'get'
   })
 }
