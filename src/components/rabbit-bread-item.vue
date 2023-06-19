@@ -1,10 +1,10 @@
 <template>
     <div class="xtx-bread-item">
       <RouterLink :to="to" v-if="to">
-        <slot></slot>
+        <slot/>
       </RouterLink>
       <span v-else>
-        <slot></slot>
+        <slot/>
       </span>
     </div>
 </template>
