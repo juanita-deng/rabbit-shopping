@@ -21,15 +21,17 @@ export default {
   props: {
     order: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   // setup默认不允许添加async,如果要添加,就必须搭配suspense组件实用
   async setup(props, context) {
+    console.log('props', props.order)
     const logistics = ref(null)
     const logisticsDom = ref(null)
-    const res = await props.order?.id && logisticsOrder(props.order.id)
+    const res = props.order?.id && await logisticsOrder(props.order.id)
     logistics.value = res?.result
+    // console.log('res', res)
     const show = () => {
       logisticsDom.value.open(props.order)
     }
