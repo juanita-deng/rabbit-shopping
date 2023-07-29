@@ -74,23 +74,35 @@
   </div>
 </template>
 <script>
-import { findCheckoutInfo, createOrder } from '@/api/order'
+import { findCheckoutInfo, createOrder, findOrderRepurchase } from '@/api/order'
 import CheckoutAddress from './components/checkout-address'
 import { provide, ref, reactive } from 'vue'
 import { Message } from '@/components'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 export default {
   name: 'RabbitPayCheckoutPage',
   components: { CheckoutAddress },
   setup() {
     const preorderInfo = ref(null)
+    const route = useRoute()
     const getPreorderInfo = () => {
-      findCheckoutInfo().then(({ result }) => {
-        preorderInfo.value = result
-        requestParams.goods = result.goods.map((item) => {
-          return { skuId: item.skuId, count: item.count }
+      // 如果地址栏中有订单ID,则显示订单ID对应的结算信息
+      const { orderId } = route.query
+      if (orderId) {
+        findOrderRepurchase(orderId).then(({ result }) => {
+          preorderInfo.value = result
+          requestParams.goods = result.goods.map((item) => {
+            return { skuId: item.skuId, count: item.count }
+          })
         })
-      })
+      } else {
+        findCheckoutInfo().then(({ result }) => {
+          preorderInfo.value = result
+          requestParams.goods = result.goods.map((item) => {
+            return { skuId: item.skuId, count: item.count }
+          })
+        })
+      }
     }
     getPreorderInfo()
     provide('getPreorderInfo', getPreorderInfo)

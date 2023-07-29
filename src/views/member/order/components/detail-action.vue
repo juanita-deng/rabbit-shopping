@@ -33,7 +33,7 @@
       </template>
       <!-- 待发货 -->
       <template v-if="order.orderState === 2">
-        <RabbitButton type="primary" size="small">再次购买</RabbitButton>
+        <RabbitButton type="primary" size="small" @click="$router.push(`/member/checkout?orderId=${order.id}`)">再次购买</RabbitButton>
       </template>
       <!-- 待收货 -->
       <template v-if="order.orderState === 3">
