@@ -18,17 +18,19 @@
        <template #fallback>loading...</template>
     </Suspense>
     <!-- 订单商品信息 -->
+    <DetailGoods :order="order"></DetailGoods>
   </div>
 </template>
 <script>
 import DetailAction from './components/detail-action'
 import DetailLogistics from './components/detail-logistics.vue'
+import DetailGoods from './components/detail-goods.vue'
 import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 import { findOrder } from '@/api/order'
 export default {
   name: 'OrderDetailPage',
-  components: { DetailAction, DetailLogistics },
+  components: { DetailAction, DetailLogistics, DetailGoods },
   setup() {
     const order = ref({})
     const route = useRoute()
