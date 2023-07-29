@@ -2,9 +2,9 @@
   <div class="detail-action">
     <div class="state">
       <span
-        :class="[`iconfont icon-order-${orderStatus[order.orderState].name}`]"
+        :class="[`iconfont icon-order-${orderStatus[order.orderState]?.name}`]"
       />
-      <p>{{ orderStatus[order.orderState].label }}</p>
+      <p>{{ orderStatus[order.orderState]?.label }}</p>
     </div>
     <div class="info">
       <p>订单编号：{{ order.id }}</p>

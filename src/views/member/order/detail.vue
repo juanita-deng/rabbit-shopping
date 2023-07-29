@@ -11,17 +11,24 @@
       <RabbitStep title="订单完成" :desc="order.endTime" />
     </RabbitSteps>
     <!-- 物流栏 -->
+    <Suspense>
+       <template #default>
+         <DetailLogistics :order="order"/>
+       </template>
+       <template #fallback>loading...</template>
+    </Suspense>
     <!-- 订单商品信息 -->
   </div>
 </template>
 <script>
 import DetailAction from './components/detail-action'
+import DetailLogistics from './components/detail-logistics.vue'
 import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 import { findOrder } from '@/api/order'
 export default {
   name: 'OrderDetailPage',
-  components: { DetailAction },
+  components: { DetailAction, DetailLogistics },
   setup() {
     const order = ref({})
     const route = useRoute()
