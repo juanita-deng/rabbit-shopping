@@ -82,23 +82,7 @@ export default {
         })
         .catch(() => {})
     }
-    // 确认收货
-    /**
-     * 温馨提示：
-     * 接口服务器地址 + member/order/consignment/ + 订单ID
-     * https://apipc-xiaotuxian-front.itheima.net/member/order/consignment/1423804938656878594
-     * 改成已发货状态，后面订单号改成，自己的订单编号。
-     */
-    const confirmOrder = (order) => {
-      Confirm({ text: '确定要收货吗?' })
-        .then(() => {
-          delteOrder(order.id).then(() => {
-            Message({ text: '确认收货成功' })
-            getOrderList()
-          })
-        })
-        .catch(() => {})
-    }
+
     // 查看物流
     const logisticsDom = ref(null)
     const checkLogistics = (order) => {
@@ -132,11 +116,32 @@ export default {
       cancelOrder,
       target,
       deleteOrder,
-      confirmOrder,
+      ...useConfirm(),
       checkLogistics,
       logisticsDom
     }
   }
+}
+export const useConfirm = () => {
+  // 确认收货
+  /**
+   * 温馨提示：
+   * 接口服务器地址 + member/order/consignment/ + 订单ID
+   * https://apipc-xiaotuxian-front.itheima.net/member/order/consignment/1423804938656878594
+   * 改成已发货状态，后面订单号改成，自己的订单编号。
+   */
+  const confirmOrder = (order) => {
+    Confirm({ text: '确定要收货吗?' })
+      .then(() => {
+        delteOrder(order.id).then(() => {
+          Message({ text: '确认收货成功' })
+          // getOrderList()
+          order.orderState = 4 // 也可重新渲染
+        })
+      })
+      .catch(() => {})
+  }
+  return { confirmOrder }
 }
 </script>
 

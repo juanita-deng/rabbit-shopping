@@ -37,7 +37,7 @@
       </template>
       <!-- 待收货 -->
       <template v-if="order.orderState === 3">
-        <RabbitButton type="primary" size="small" style="margin-right: 10px">
+        <RabbitButton type="primary" size="small" style="margin-right: 10px" @click="onConfrim(order)">
           确认收货
         </RabbitButton>
         <RabbitButton type="plain" size="small">再次购买</RabbitButton>
@@ -68,6 +68,7 @@
 </template>
 <script>
 import { orderStatus } from '@/api/constant'
+import { useConfirm } from '../index.vue'
 export default {
   name: 'OrderDetailAction',
   props: {
@@ -77,7 +78,7 @@ export default {
     }
   },
   setup() {
-    return { orderStatus }
+    return { orderStatus, ...useConfirm() }
   }
 }
 </script>
