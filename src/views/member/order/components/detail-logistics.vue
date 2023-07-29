@@ -6,7 +6,9 @@
     </p>
     <a href="javascript:;" @click="show">查看物流</a>
   </div>
-  <OrderLogistics ref="logisticsDom" />
+  <Teleport to="body">
+      <OrderLogistics ref="logisticsDom" />
+    </Teleport>
 </template>
 
 <script>
