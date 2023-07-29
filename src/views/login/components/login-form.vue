@@ -188,7 +188,7 @@ export default {
         const getApi = () => {
           return isAccountLogin.value ? userAccountLogin(form.account, form.password) : userMobileLogin(form.mobile, form.code)
         }
-        // 测试账号:zhousg  123456
+        // 测试账号:zhousg  123456   账号2:demo  hm#qd@23!
         getApi().then(({ result }) => {
           // 登录成功后:
           // 1.存储用户信息
